@@ -1,0 +1,149 @@
+:root{
+    /*-- global styling -- */
+
+    /*-- global variables -- */
+    --bg-color: #323244;
+    --dark-blue-color: #5a5a77;
+    --body-text-color: #fff;
+
+}
+/************************
+************************
+************************
+MENU: FOR THIS CSS FILE 
+------------------------
+01. Scroll barr
+02. General
+03 LEFT Side
+04. Right Side
+05. Responsive
+************************
+************************
+************************/
+
+
+/************************
+        Scroll Bar
+************************/
+ /* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+} 
+
+/************************
+        General
+************************/
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: var(--bg-color);
+    color: var(--body-text-color);
+}
+
+.text-dark-blue{
+    color: var(--dark-blue-color);
+}
+.bg-dark-blue{
+    background-color: var(--dark-blue-color);
+}
+
+.loading{
+    filter: invert(100);
+    width: 30px;
+    margin-left: 10px;
+    visibility: hidden;
+}
+
+.loading-animate{
+    visibility: visible;
+    animation:spin 2s linear infinite;
+}
+
+@keyframes spin { 
+    100% {
+        transform:rotate(360deg);
+    } 
+}
+
+/*** Make column full height ***/
+.height-match-parent-responsive {
+    height: calc(100vh - 60px);
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.height-match-parent-responsive .list-group{
+    max-height: calc(100% - 70px);
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.position-bottom-responsive {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 35px;
+}
+
+
+/************************
+        LEFT SIDE
+************************/
+.todo-person-column{
+   
+}
+
+.person-list{
+    
+    font-weight: 600;
+}
+.person-list li{
+    cursor: pointer;
+}
+/*** Cursor Style ***/
+.cursor-pointe{
+   cursor: pointer;
+}
+
+
+
+/************************
+        Rights side
+************************/
+li.completed p {
+    text-decoration: line-through;
+}
+
+
+/***********************
+    Responsive Codes
+***********************/
+
+@media only screen and (max-width:576px){
+    .position-bottom-responsive {
+        margin-top: 20px;
+        position: static;
+    }
+    .height-match-parent-responsive {
+        height: auto;
+    }
+}

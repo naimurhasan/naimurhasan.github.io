@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width = device-width, initial-scale = 1.0">
+    <meta http-equiv="X-UA-Compatible" content = "ie=edge">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/main.css">
+    <script src="js/vue.min.js"></script>
+    <script src="js/axios.min.js"></script>
+    <title> Todowe </title>
+</head>
+
+<body>
+    <div id="app">
+        <page-header v-bind:updating="updating"></page-header>
+        <div class="container">
+            <div class="row navbar-expand-sm">
+                <!-- left column -->
+                <person-box v-bind:person_list="person_list" v-bind:selected_id="selected_person_id"  v-on:add-person="addThePerson" v-on:delete-person="deletePerson" v-on:select-me="selectPerson" ></person-box>
+                
+                <!-- Right column -->
+                <todo-box :todos="selected_persons_todo" @mark-complete="markComplete" v-on:add-todo="addTodo" :name="selected_peson_name"></todo-box>
+            </div>            
+        </div>
+    </div>
+    <script src="js/jquery-3.4.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/loadash/lodash.min.js"></script>
+    <script type="module" src="app.js"></script>
+    
+</body>
+</html>

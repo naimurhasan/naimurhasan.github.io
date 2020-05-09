@@ -10,43 +10,43 @@ const extracted_template = `
               <div class="collapse navbar-collapse" id="categoryNavbar">
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Nature</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_05.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_05.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Movie</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_06.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_06.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Games</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_07.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_07.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Cars</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_08.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_08.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Bikes</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_09.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_09.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Music</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_10.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_10.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Flowers</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_11.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_11.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Occations</span>
                       <div class="preview"><img src="/img/wallpaper-thums/thumb_12.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Abstract</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_03.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_03.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>3D</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_14.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_14.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Airway</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_15.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_15.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Animals</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_16.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_16.jpg"></div>
                     </a></li>
                   <li class="list-group-item"><a href="/pages/nature.html" class="nav-animated-item"><span>Animation</span>
-                      <div class="preview"><img src="/img/wallpaper-thums/thumb_17.jpg"></div>
+                      <div class="preview"><img src="/wallpaper/img/wallpaper-thums/thumb_17.jpg"></div>
                     </a></li>
                 </ul>
               </div>

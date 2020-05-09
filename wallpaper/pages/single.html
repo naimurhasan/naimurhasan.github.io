@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width = device-width, initial-scale = 1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <!-- wow slider -->
+  <link rel="stylesheet" type="text/css" href="../css/wowslider_style.css" media="screen"/>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../css/main.css">
+  <!-- Vue js -->
+  <script src="../js/vue.min.js"></script>
+  <script src="../js/axios.min.js"></script>
+  <title> Wallpapers | 99wall.com </title>
+</head>
+
+<body>
+  <div id="app">
+
+    <!-- Header Start -->
+    <nav class="navbar navbar-expandd-md navbar-dark">
+      <div class="container">
+        <a href="/index.html" class="navbar-brand"><img src="../img/logo.png" class="logo"></a>
+        <form class="form-inline">
+          <div class="search-group">
+            <input class="search-input form-control" placeholder="Search Wallpaper">
+            <input type="submit" value="Search" class="search-btn btn-expandalbe">
+          </div>
+        </form>
+
+      </div>
+    </nav>
+    <!-- Header End -->
+
+    <!-- body container start -->
+    <div class="container mt-4">
+      <!-- body row -->
+      <div class="row">
+
+        <!-- left column start -->
+        <div class="col-md-4 col-lg-3">
+          <div class="category-box widget-box p-3">
+              <category_listview></category_listview>  
+          </div>
+        </div>
+        <!-- left column start -->
+
+        <!-- right column start -->
+        <div class="col">
+          <!-- single wallpaper -->
+          <div class="widget-box p-2 mt-3 mt-md-0">
+            <img class="img-fluid" alt="" src="/img/wallpapers/image_1.jpg">
+            <h4 class="mt-3">Milky Strawberry</h4>
+            <a href="#" class="btn btn-action-sm btn-expandalbe">Download original</a> <a href="#" class="btn btn-action-sm btn-expandalbe">1280x720</a> <a href="#" class="btn btn-action-sm btn-expandalbe">320x568</a> <a href="#" class="btn btn-action-sm btn-expandalbe">768x1024</a>
+          </div>
+          
+                    
+          <div class="row mt-4">
+            <div class="col">
+              <h5>You may like also: </h5>
+            </div>
+          </div>
+          <div class="row random-wallpapers">
+           
+           <div class="col-md-4 mt-3">
+              <div class="widget-box p-1"><a href="/pages/single.html"><img src="../img/wallpaper-thums/thumb_10.jpg" alt="" class="rounded-5 w-100"></a></div>
+            </div>
+            <div class="col-md-4 mt-3">
+              <div class="widget-box p-1"><img src="../img/wallpaper-thums/thumb_11.jpg" alt="" class="rounded-5 w-100"></div>
+            </div>
+            <div class="col-md-4 mt-3">
+              <div class="widget-box p-1"><img src="../img/wallpaper-thums/thumb_12.jpg" alt="" class="rounded-5 w-100"></div>
+            </div>
+            <div class="col-md-4 mt-3">
+              <div class="widget-box p-1"><img src="../img/wallpaper-thums/thumb_13.jpg" alt="" class="rounded-5 w-100"></div>
+            </div>
+            <div class="col-md-4 mt-3">
+              <div class="widget-box p-1"><img src="../img/wallpaper-thums/thumb_14.jpg" alt="" class="rounded-5 w-100"></div>
+            </div>
+            <div class="col-md-4 mt-3">
+              <div class="widget-box p-1"><img src="../img/wallpaper-thums/thumb_15.jpg" alt="" class="rounded-5 w-100"></div>
+            </div>
+          </div>
+          
+          <nav class="mt-4 mb-5">
+          
+          </nav>
+
+
+        </div>
+        <!-- right column start -->
+      </div>
+      <!-- body row -->
+
+    </div>
+    <!-- body container end -->
+
+  </div>
+
+  <script src="../js/jquery-3.4.1.slim.min.js"></script>
+  <script src="../js/popper.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/loadash/lodash.min.js"></script>
+  <script src="../js/jquery-3.5.0.min.js"></script>
+  <script src="../js/wowslider_script.js"></script>
+  <script type="module" src="../app.js"></script>
+
+</body></html>
+
+

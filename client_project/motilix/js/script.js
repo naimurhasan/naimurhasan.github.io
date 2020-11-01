@@ -1,0 +1,11 @@
+$(window).scroll(function(e){
+    if($(window).scrollTop()>450){
+        $("nav").addClass("fixed-top");
+        $(".btn-signup").removeClass("btn-normal");
+        $(".btn-signup").addClass("btn-blue");
+    }else{
+        $("nav").removeClass("fixed-top");
+        $(".btn-signup").addClass("btn-normal");
+        $(".btn-signup").removeClass("btn-blue");
+    }
+});

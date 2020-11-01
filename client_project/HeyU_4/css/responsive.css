@@ -1,0 +1,65 @@
+@media only screen and (min-width:1200px){
+}
+
+@media only screen and (max-width: 1199px){
+    img.img-overlay-phone {
+        height: 535px;
+        margin-top: -50px;
+    }
+    .feature-grid {
+        height: 461px;
+    }
+}
+
+@media only screen and (max-width: 991px){
+
+    header::after {
+        bottom: -102px;
+    }
+    .feature-grid{
+        height: auto;
+    }
+    img.img-overlay-phone {
+        height: auto;
+        margin-top: 50px;
+    }
+}
+
+@media only screen and (max-width: 767px){
+
+    img.header-phone {
+        margin-top: 30px;
+    }
+    .hero-content{
+        text-align:center;
+    }
+
+    .footer-link-box li {
+        display: block;
+        padding-bottom:10px;
+    }
+    input.email-input {
+        padding: 8px 20px;
+        font-size: 14px;
+        border-radius: 20px 20px 20px 20px;
+        min-width: 90%;
+    }
+    input[type="submit"], .btn-submit {
+        margin-top: 10px;
+        margin-left: 0px;
+    }
+    .icon-margin{
+        margin-left: 0px;
+    }
+    .plan-inner {
+    min-width: 263px;
+    }
+    plan {
+    margin: 10px 0; */
+    }
+}
+@media only screen and  (min-width: 992px) {
+    .offset-md-13{
+        margin-left: 11%; /* <- your value here */
+    }
+}

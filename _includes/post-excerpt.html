@@ -1,0 +1,73 @@
+{% comment %}<!-- post image teaser assignment - similar to default-head-seo.html -->{% endcomment %}
+
+{%- assign post_large_image = post.header.og_image | default: post.header.overlay_image | default: post.header.image -%}
+{%- unless post_large_image contains '://' -%}
+  {%- assign post_large_image = post_large_image | absolute_url -%}
+{%- endunless -%}
+{%- assign post_large_image = post_large_image | escape -%}
+
+{%- assign post_teaser_image = post.header.teaser | default: site.og_image -%}
+{%- unless post_teaser_image contains '://' -%}
+  {%- assign post_teaser_image = post_teaser_image | absolute_url -%}
+{%- endunless -%}
+{%- assign post_teaser_image = post_teaser_image | escape -%}
+
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="blog-block">
+        <div class="blog-image">
+          {% if post_large_image %}
+            <img class="img-responsive" src="{{ post_large_image }}" alt="Post Large Teaser 800x560">
+          {% elsif post_teaser_image %}
+            <img class="img-responsive" src="{{ post_teaser_image }}" alt="Post Teaser 800x560">
+          {% else %}
+            <img class="img-responsive" src="{{ site.baseurl}}/assets/images/blog/01.jpg" alt="Post Teaser Placeholder 800x560">
+          {% endif %}
+          <div class="blog-date">
+            <span><time datetime="{{ post.date | date: "%Y-%m-%d" }}">{{ post.date | date: "%B %d, %Y" }}</time></span>
+          </div>
+        </div>
+        <div class="blog-info">
+          <div class="blog-meta">
+            <p><span class="ti-user"></span> <a href="{{ site.baseurl }}/#about">{{ site.author.name }}</a></p>
+            {% if site.category_archive.type and post.categories[0] %}
+              {% include post-excerpt-category.html %}
+            {% endif %}
+            <p><span class="ti-comment"></span> <a href="{{ post.url }}#disqus_thread" data-disqus-identifier="{{ post.id }}" class="post.scroll">Comments</a></p>
+            {% if post.read_time %}<p><span class="ti-alarm-clock"></span>{% include read-time.html %}</p>{% endif %}
+          </div>
+          <div class="blog-content">
+            {% if post.id %}
+              {% assign title = post.title | markdownify | remove: "<p>" | remove: "</p>" %}
+            {% else %}
+              {% assign title = post.title %}
+            {% endif %}
+            <a href="{{ post.url }}">{{ title }}</a>
+            {% if post.excerpt %}<p>{{ post.excerpt | markdownify | strip_html | truncate: 160 }}</p>{% endif %}
+            <div class="blog-bottom clearfix">
+              <div class="button-small">
+                <a href="{{ post.url }}">Read More..</a>
+              </div>
+              <div class="social pull-right">
+                <ul>
+                  <li>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ post.url | absolute_url | url_encode }}"  onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="{{ site.data.ui-text[site.locale].share_on_label | default: 'Share on' }} Facebook">
+                      <i class="fa fa-facebook"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://twitter.com/intent/tweet?{% if site.twitter.username %}via={{ site.twitter.username | url_encode }}&{% endif %}text={{ post.title | url_encode }}%20{{ post.url | absolute_url | url_encode }}" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="{{ site.data.ui-text[site.locale].share_on_label | default: 'Share on' }} Twitter">
+                      <i class="fa fa-twitter"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ post.url | absolute_url | url_encode }}" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="{{ site.data.ui-text[site.locale].share_on_label | default: 'Share on' }} LinkedIn">
+                      <i class="fa fa-linkedin"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>

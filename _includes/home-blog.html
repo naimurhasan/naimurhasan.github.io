@@ -1,0 +1,39 @@
+<!--=================================
+home-blog.html -->
+<section id="blog" class="blog white-bg page-section">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-12 col-md-12">
+        <div class="section-title">
+          <div class="section-title-name">
+            <span>My Latest Blog Posts</span>
+            <h2>From the blog </h2>
+          </div>
+          <div class="title-name-gray">
+            <strong>Blog</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      {% for post in site.posts limit:4 %}
+        <!-- ============================
+        autgenerated blog post -->
+        {% include post-excerpt.html %}
+        <!-- ============================
+        end blog post -->
+      {% endfor %}
+    </div>
+
+    <div class="row">
+      
+        <div class="button-small pull-right">
+          <a href="{{ site.baseurl }}/blog/">More Blog Posts &raquo;</a>
+        </div>
+      
+    </div>
+
+  </div>
+</section>
+<!--=================================
+home-blog.html -->

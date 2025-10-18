@@ -1,0 +1,153 @@
+<!--=================================
+  home-my-skill.html -->
+<section id="skill" class="my-skill white-bg page-section">
+ <div class="container-fluid">
+   <div class="row">
+	<div class="col-lg-12 col-md-12">
+	 <div class="section-title">
+   	 	 <div class="section-title-name">
+   	 	  	<span>I am good at</span>
+   	  	  	<h2>My Skill</h2>
+   	    </div>	
+   	    <div class="title-name-gray">
+   	   	<strong>My Skill</strong>
+   	   </div>
+   	 </div>
+	</div>
+   </div>	
+   <div class="row">
+	<div class="col-lg-6 col-md-6 col-sm-6">
+ 	 <div class="skill-content">
+ 		<h2>My Professional Strengths</h2>
+ 		<p>I'm a developer who enjoys solving problems through code — whether it's scraping data, building full-stack apps, or automating repetitive tasks. My strengths come from years of hands-on work across different tech stacks and real projects that actually went live.<br /><br />
+ I focus on writing simple, maintainable code that makes systems faster and easier to manage. I've learned to break down complex workflows into smaller, reusable modules and automate anything that wastes time. I'm comfortable working solo or with distributed teams, managing tasks from backend logic to UI polish.</p>
+ 	 </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6">
+ 	 <div class="skill">
+             <ul>
+               <li>Web Scraping & Automation
+                 <div class="bar_container">
+                  <span class="bar" data-bar='{ "color": "#07cb79" }'>
+                    <span class="pct">90%</span>
+                  </span>
+                </div>
+              </li>
+              <li>Full-Stack Development
+               <div class="bar_container">
+                 <span class="bar" data-bar='{ "color": "#07cb79", "delay": "600" }'>
+                   <span class="pct">85%</span>
+                 </span>
+                </div>
+              </li>
+              <li>Mobile App Development
+                <div class="bar_container">
+                 <span class="bar" data-bar='{ "color": "#07cb79", "delay": "1200" }'>
+                  <span class="pct">80%</span>
+                 </span>
+                </div>
+              </li>
+              <li>API Integration & Cloud Deployment
+               <div class="bar_container">
+                 <span class="bar" data-bar='{ "color": "#07cb79", "delay": "1800" }'>
+                 <span class="pct">85%</span>
+                </span>
+               </div>
+              </li>
+          </ul>
+          <div class="skill-chart">
+          	<div class="skill-chart-expand clearfix">
+               <div class="expand expand-left">
+                   <p>Newbie</p>
+                </div>
+                <div class="expand expand-left">
+                  <p>Decent</p>
+                 </div>
+                 <div class="expand expand-right">
+                   <p>Pretty Good</p>
+                 </div>
+                 <div class="expand expand-right">
+                   <p>Master</p>
+                 </div>
+               </div>
+          </div>
+         </div>
+ 	   </div>
+   </div>
+ <div class="language-skills">
+   <div class="row">
+   	 <div class="col-lg-12 col-md-12"> 
+   	 	<h2>Language skills</h2>
+      <p>You will begin to realise why this exercise is called the Dickens Pattern with reference to the ghost showing Scrooge some different futures as you notice that the idea of this exercise is to hypnotize yourself to be aware of two very real possibilities for your future. Two distinct pathways. </p>
+      </div>
+   </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-3 col-sm-3">
+       <div class="chart-bar">  
+          <div class="chart" data-percent="73">
+               <span class="percent"></span>
+           </div>
+             <h3>English <br/> Experienced</h3>
+            </div> 
+       </div> 
+       <div class="col-lg-3 col-md-3 col-sm-3">
+       <div class="chart-bar">  
+          <div class="chart" data-percent="55">
+               <span class="percent"></span>
+           </div>
+             <h3>French <br />Advanced</h3>
+       </div> 
+       </div> 
+       <div class="col-lg-3 col-md-3 col-sm-3">
+       <div class="chart-bar">  
+          <div class="chart" data-percent="89">
+               <span class="percent"></span>
+           </div>
+             <h3>Spanish <br />Basic</h3>
+       </div> 
+       </div> 
+       <div class="col-lg-3 col-md-3 col-sm-3">
+       <div class="chart-bar">  
+          <div class="chart" data-percent="95">
+               <span class="percent"></span>
+           </div>
+             <h3>German <br />Basic</h3>
+       </div> 
+      </div> 
+     </div> 
+   <div class="knowledge">
+   <div class="row">
+   	 <div class="col-lg-12 col-md-12"> 
+   	 	<h2>Core Strengths & Skills</h2>
+   	 	<p>A comprehensive technical skill set developed through years of hands-on experience across different tech stacks, frameworks, and real-world projects.</p>
+   	 </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4">
+        <ul>
+          <li><span class="ti-hand-point-right"></span> Web Scraping & Automation (BeautifulSoup, Selenium, Scrapy)</li>
+          <li><span class="ti-hand-point-right"></span> Full-Stack Development (Django, Laravel, Node.js)</li>
+          <li><span class="ti-hand-point-right"></span> Frontend Frameworks (React, Vue)</li>
+        </ul>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4">
+        <ul>
+          <li><span class="ti-hand-point-right"></span> Mobile App Development (Flutter, Firebase Integration)</li>
+          <li><span class="ti-hand-point-right"></span> API Integration & Cloud Deployment (REST, Webhooks, DigitalOcean)</li>
+          <li><span class="ti-hand-point-right"></span> Database Management (MySQL, PostgreSQL, MongoDB)</li>
+        </ul>
+      </div>
+      <div class="col-lg-4 col-md-4 col-sm-4">
+      <ul>
+        <li><span class="ti-hand-point-right"></span> Version Control & Collaboration (Git, GitHub, CI/CD basics)</li>
+        <li><span class="ti-hand-point-right"></span> Problem Solving, Debugging & Code Optimization</li>
+        <li><span class="ti-hand-point-right"></span> Clean Architecture & Maintainable Project Structure</li>
+      </ul>
+    </div>
+  </div>
+ </div>	
+ </div>
+ </div>
+</section>
+<!--=================================
+  home-my-skill.html -->

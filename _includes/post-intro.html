@@ -1,0 +1,36 @@
+<!--=================================
+post-intro.html -->
+<div class="page-header bg gradient-01">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="top-bar clearfix">
+        <div class="back-home pull-left">
+          <a href="{{ site.baseurl }}/blog/"><span class="ti-angle-left"></span> back to blog</a>
+        </div>
+        <ul class="breadcrumb pull-right">
+          <li><a href="{{ site.baseurl }}/"><span class="ti-home"></span> Home</a></li>
+          <li><a href="{{ site.baseurl }}/blog/"> Blog</a></li>
+          <li class="active">Current Post</li>
+        </ul>
+      </div>
+      <div class="page-header-title">
+        {% if page.id %}
+          {% assign title = page.title | markdownify | remove: "<p>" | remove: "</p>" %}
+        {% else %}
+        { % assign title = page.title %}
+        {% endif %}
+        <h1 id="page-title">{{ title }}</h1>
+        <div class="blog-meta">
+          <p><span class="ti-user"></span> <a href="#author">{{ site.author.name }}</a></p>
+          {% if site.category_archive.type and page.categories[0] %}
+            {% include post-intro-category.html %}
+          {% endif %}
+          <p><span class="ti-comment"></span> <a href="{{ page.url }}#disqus_thread" data-disqus-identifier="{{ page.id }}" class="page-scroll">Comments</a></p>
+          <p><span class="ti-alarm-clock"></span><a href="#content" class="page-scroll">{% include read-time.html %}</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--=================================
+post-intro.html -->

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -o \"tor-johnson.jpg\" \"https://media.licdn.com/dms/image/v2/D4D03AQEbqA1r33FUGQ/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1705320038967?e=1762387200&v=beta&t=rzdHTdqAJUB2cdxx5BDK_zfrS20sulP-zu8FoPYm6tQ\")",
+      "Bash(curl -o \"enamul-haque.jpg\" \"https://media.licdn.com/dms/image/v2/D5603AQEddeuIr3Lp8Q/profile-displayphoto-shrink_100_100/profile-displayphoto-shrink_100_100/0/1688916784973?e=1762387200&v=beta&t=IDHP-12RfARZoO1SW_9JNhM3ex9LOEfmnTf4bJTNf-I\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

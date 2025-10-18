@@ -1,0 +1,55 @@
+<!--=================================
+post -->
+<section class="blog blog-single white-bg page-section-pt" id="post">
+
+  <article itemscope itemtype="http://schema.org/CreativeWork">
+
+    {% if page.title %}<meta itemprop="headline" content="{{ page.title | markdownify | strip_html | strip_newlines | escape_once }}">{% endif %}
+    {% if page.excerpt %}<meta itemprop="description" content="{{ page.excerpt | markdownify | strip_html | strip_newlines | escape_once }}">{% endif %}
+    {% if page.date %}<meta itemprop="datePublished" content="{{ page.date | date: "%B %d, %Y" }}">{% endif %}
+    {% if page.last_modified_at %}<meta itemprop="dateModified" content="{{ page.last_modified_at | date: "%B %d, %Y" }}">{% endif %}
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-lg-9 col-md-9">
+          <div class="owl-carousel-1">
+            {% if page.carousel.item1 %}<div class="item"> <img src="{{ site.baseurl }}/{{ page.carousel.item1 }}" alt=""> </div>{% endif %}
+            {% if page.carousel.item2 %}<div class="item"> <img src="{{ site.baseurl }}/{{ page.carousel.item2 }}" alt=""> </div>{% endif %}
+            {% if page.carousel.item3 %}<div class="item"> <img src="{{ site.baseurl }}/{{ page.carousel.item3 }}" alt=""> </div>{% endif %}
+          </div>
+          <div class="content" id="content">
+            {{ content }}
+          </div>
+          <hr>
+          <footer class="page__meta">
+            {% if site.data.ui-text[site.locale].meta_label %}
+              <h4 class="page__meta-title">{{ site.data.ui-text[site.locale].meta_label }}</h4>
+            {% endif %}
+            {% include post-taxonomy.html %}
+            {% if page.last_modified_at %}
+              <p class="page__date"><strong><i class="fa fa-calendar" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].date_label | default: "Updated:" }}</strong> <time datetime="{{ page.last_modified_at | date: "%Y-%m-%d" }}">{{ page.last_modified_at | date: "%B %d, %Y" }}</time></p>
+            {% elsif page.date %}
+              <p class="page__date"><strong><i class="fa fa-calendar" aria-hidden="true"></i> {{ site.data.ui-text[site.locale].date_label | default: "Updated:" }}</strong> <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %d, %Y" }}</time></p>
+            {% endif %}
+          </footer>
+          <hr>
+          {% include post_pagination.html %}
+
+          {% if jekyll.environment == 'production' and site.comments.provider and page.comments %}
+            {% include post-content-comments.html %}
+          {% endif %}
+
+        </div>
+
+
+        {% include post-content-sidebar.html %}
+
+
+      </div>
+    </div>
+
+  </article>
+
+</section>
+<!--=================================
+post -->

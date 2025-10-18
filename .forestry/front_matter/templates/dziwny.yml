@@ -1,0 +1,22 @@
+---
+label: Dziwny
+hide_body: false
+is_partial: false
+fields:
+- type: boolean
+  default: false
+  label: Labelka
+  name: labelka
+  description: Taka tam labelka
+- type: tag_list
+  name: tagi_sa_fajne
+  label: Tagi są fajne
+  description: To jest tag
+- type: list
+  name: lista_sortowalna
+  label: Lista sortowalna
+- type: file
+  label: Image upload
+  name: image_upload
+pages:
+- _posts/forestry-testing-post.md

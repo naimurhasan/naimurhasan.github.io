@@ -1,0 +1,272 @@
+{% assign author = page.author | default: page.authors[0] | default: site.author %}
+{% assign author = site.data.authors[author] | default: author %}
+
+<!--=================================
+ common-contact.html -->
+<section id="contact" class="contact-section-new page-section-pt">
+  <div class="container">
+    <div class="row contact-info-row">
+      <div class="col-lg-12">
+        <h3 class="contact-section-title">Contact Info</h3>
+        <div class="contact-info-items-wrapper">
+          <div class="contact-info-item">
+            <span class="ti-location-pin"></span>
+            <div class="contact-info-text">
+              <h5>Location</h5>
+              <p>Dhaka, Bangladesh</p>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <span class="ti-email"></span>
+            <div class="contact-info-text">
+              <h5>Email</h5>
+              <p id="unspamMail">naimurhasanrwd@gmail.com</p>
+            </div>
+          </div>
+          <div class="contact-info-item">
+            <span class="ti-github"></span>
+            <div class="contact-info-text">
+              <h5>GitHub</h5>
+              <p>naimurhasan</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row contact-actions-row">
+      <div class="col-lg-6 col-md-6 contact-social-box">
+        <h3>Connect With Me</h3>
+        <p>Follow me on social media for updates and tech insights.</p>
+        <div class="social-icons-footer">
+          <ul>
+          {% if author.keybase %}
+            <li>
+              <a href="https://keybase.io/{{ author.keybase }}" >
+                <i class="fa fa-key"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.twitter %}
+            <li>
+              <a href="https://twitter.com/{{ author.twitter }}" >
+                <i class="fa fa-twitter"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.facebook %}
+            <li>
+              <a href="https://www.facebook.com/{{ author.facebook }}" >
+                <i class="fa fa-facebook"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.google_plus %}
+            <li>
+              <a href="https://plus.google.com/{{ author.google_plus }}" >
+                <i class="fa fa-google-plus"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.linkedin %}
+            <li>
+              <a href="https://www.linkedin.com/in/{{ author.linkedin }}" >
+                <i class="fa fa-linkedin"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.xing %}
+            <li>
+              <a href="https://www.xing.com/profile/{{ author.xing }}" >
+                <i class="fa fa-xing"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.instagram %}
+            <li>
+              <a href="https://instagram.com/{{ author.instagram }}" >
+                <i class="fa fa-instagram"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.tumblr %}
+            <li>
+              <a href="https://{{ author.tumblr }}.tumblr.com" >
+                <i class="fa fa-tumblr"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.bitbucket %}
+            <li>
+              <a href="https://bitbucket.org/{{ author.bitbucket }}" >
+                <i class="fa fa-bitbucket"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.github %}
+            <li>
+              <a href="https://github.com/{{ author.github }}" >
+                <i class="fa fa-github"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.gitlab %}
+            <li>
+              <a href="https://gitlab.com/{{ author.gitlab }}" >
+                <i class="fa fa-gitlab"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.stackoverflow %}
+            <li>
+              <a href="https://www.stackoverflow.com/users/{{ author.stackoverflow }}" >
+                <i class="fa fa-stack-overflow"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.lastfm %}
+            <li>
+              <a href="https://last.fm/user/{{ author.lastfm }}" >
+                <i class="fa fa-lastfm"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.dribbble %}
+            <li>
+              <a href="https://dribbble.com/{{ author.dribbble }}" >
+                <i class="fa fa-dribbble"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.pinterest %}
+            <li>
+              <a href="https://www.pinterest.com/{{ author.pinterest }}" >
+                <i class="fa fa-pinterest"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.foursquare %}
+            <li>
+              <a href="https://foursquare.com/{{ author.foursquare }}" >
+                <i class="fa fa-foursquare"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.steam %}
+            <li>
+              <a href="https://steamcommunity.com/id/{{ author.steam }}" >
+                <i class="fa fa-steam"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.youtube %}
+            {% if author.youtube contains "://" %}
+              <li>
+                <a href="{{ author.youtube }}" >
+                  <i class="fa fa-youtube"></i>
+                </a>
+              </li>
+            {% else author.youtube %}
+              <li>
+                <a href="https://www.youtube.com/user/{{ author.youtube }}" >
+                  <i class="fa fa-youtube"></i>
+                </a>
+              </li>
+            {% endif %}
+          {% endif %}
+          {% if author.soundcloud %}
+            <li>
+              <a href="https://soundcloud.com/{{ author.soundcloud }}" >
+                <i class="fa fa-soundcloud"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.weibo %}
+            <li>
+              <a href="https://www.weibo.com/{{ author.weibo }}" >
+                <i class="fa fa-weibo"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.flickr %}
+            <li>
+              <a href="https://www.flickr.com/{{ author.flickr }}" >
+                <i class="fa fa-flickr"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.codepen %}
+            <li>
+              <a href="https://codepen.io/{{ author.codepen }}" >
+                <i class="fa fa-codepen"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% if author.vine %}
+            <li>
+              <a href="https://vine.co/u/{{ author.vine }}" >
+                <i class="fa fa-vine"></i>
+              </a>
+            </li>
+          {% endif %}
+          </ul>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 contact-cv-box">
+        <h3>Resume</h3>
+        <div class="cv-download-box">
+          <a href="http://rebrand.ly/naimur_resume" target="_blank" class="btn-download-cv">
+            <i class="ti-download"></i> Download CV
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer Bottom (Full Width) -->
+<div class="footer-bottom-new">
+  <div class="container">
+      <div class="row">
+        <div class="col-md-6 footer-copyright">
+          <p>&copy; <script>document.write(new Date().getFullYear());</script> Md Naimur Hasan. All Rights Reserved.</p>
+        </div>
+        <div class="col-md-6 footer-powered">
+          <p>Built with
+            <a href="https://w3c.github.io/html/" target="_blank"><i class="fa fa-html5"></i></a>
+            <a href="https://www.w3.org/Style/CSS/" target="_blank"><i class="fa fa-css3"></i></a>
+            <a href="https://jamstack.org/" target="_blank">JAMstack</a>
+          </p>
+        </div>
+      </div>
+  </div>
+</div>
+
+<!-- Contact Form Sidebar (Original) -->
+    <div class="contact-form">
+      <div id="contact-wrapper">
+        <div class="contact-content">
+          <div id="formmessage">Success/Error Message Goes Here</div>
+          <form class="form-horizontal" id="contactform" method="post" action="https://formcarry.com/s/2RO8WeXDcrB" accept-charset="UTF-8">
+            <div class="contact-form">
+              <h4>Drop me a line</h4>
+              <p>Use this form to tell me about your project goals and needs. I will be in touch within 24 hours.</p>
+              <input id="name" type="text" placeholder="Name*" name="name">
+              <input type="email" placeholder="Email*" name="email">
+              <input type="text" placeholder="Phone*" name="phone">
+              <textarea class="input-message" placeholder="Comment*" rows="7" name="message"></textarea>
+              <input type="hidden" name="action" value="sendEmail"/>
+              <input type="hidden" name="_subject" value="Contact via portfolio!" />
+              <input type="hidden" name="_format" value="plain" />
+              <input type="text" name="_gotcha" style="display:none" />
+              <div class="g-recaptcha" data-sitekey="6Le1EO8rAAAAAGGk4NMKrLXK44YH3ZQlQ5aniMqm"></div>
+              <button id="submit" name="submit" type="submit" value="Send" class="button-small"> Say Hello! </button>
+            </div>
+          </form>
+          <div id="ajaxloader" style="display:none"><img class="center-block" src="/assets/images/ajax-loader-white.gif" alt=""></div>
+        </div>
+        <a href="#" class="contact-toggle"><span class="ti-comments"></span></a>
+      </div>
+    </div>
+<!--=================================
+ common-contact.html -->

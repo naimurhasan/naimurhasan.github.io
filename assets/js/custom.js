@@ -31,14 +31,40 @@ Design and Developed by: naimurhasan.github.io
 
 (function($){
   "use strict";
- 
-  $(window).load(function() {
+
+  $(document).ready(function() {
 
 /*************************
-        Preloader
-*************************/  
-   $("#load").fadeOut();
-   $('#loading').delay(0).fadeOut('slow');
+        Preloader - REMOVED FOR BETTER UX
+*************************/
+   // Loading screen removed - content shows immediately
+   // $("#load").fadeOut();
+   // $('#loading').delay(0).fadeOut('slow');
+
+/*************************
+        Lazy Loading Image Handler
+*************************/
+   // Add loaded class to images when they finish loading
+   $('img[loading="lazy"]').on('load', function() {
+     $(this).addClass('loaded');
+     // Stop shimmer animation to save resources
+     var container = $(this).closest('.about-image, .portfolio-item .item-inner, .testimonials-avtar');
+     if (container.length) {
+       container.css('animation', 'none');
+     }
+   });
+
+   // Handle images that are already cached/loaded
+   $('img[loading="lazy"]').each(function() {
+     if (this.complete) {
+       $(this).addClass('loaded');
+       // Stop shimmer animation for cached images
+       var container = $(this).closest('.about-image, .portfolio-item .item-inner, .testimonials-avtar');
+       if (container.length) {
+         container.css('animation', 'none');
+       }
+     }
+   });
 
 /*************************
         Owl carousel
@@ -48,11 +74,11 @@ Design and Developed by: naimurhasan.github.io
        loop:true,
        autoplay:true,
        autoplayTimeout:2500,
-       autoplayHoverPause:true, 
+       autoplayHoverPause:true,
        smartSpeed:800,
        dots:true,
        nav:false
-      }); 
+      });
   });
 
 /*************************

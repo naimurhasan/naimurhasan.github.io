@@ -25,7 +25,6 @@ A **Full Stack Software Engineer** with **7+ years of experience** working acros
 
 - 🎓 **Bachelor's Degree in Computer Science & Engineering** from Shanto-Mariam University of Creative Technology
 - 📍 Based in **Dhaka, Bangladesh**
-- 🎂 Born in **1998**
 - 🔭 Currently building scalable, data-driven solutions
 - 💡 Passionate about crafting applications powered by intelligent automation and real-time data systems
 - 🌱 Specializing in **App Development**, **Web Scraping**, **Automation**, **Data Engineering**, and **Full Stack Development**

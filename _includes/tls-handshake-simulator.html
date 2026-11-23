@@ -1,0 +1,736 @@
+<div class="tls-sim-wrapper" id="tlsSimulator">
+  <div class="tls-sim-header">
+    <div class="tls-sim-title">
+      <span class="sim-badge">Interactive Demo</span>
+      <h4>Handshake Ping-Pong Simulator</h4>
+    </div>
+    <div class="tls-sim-tabs" role="tablist">
+      <button class="sim-tab active" data-proto="tls12" type="button">TLS 1.2 (2-RTT)</button>
+      <button class="sim-tab" data-proto="tls13" type="button">TLS 1.3 (1-RTT)</button>
+      <button class="sim-tab" data-proto="tls13_0rtt" type="button">TLS 1.3 0-RTT</button>
+    </div>
+  </div>
+
+  <div class="tls-sim-toolbar">
+    <div class="sim-controls">
+      <button class="sim-btn sim-btn-play" id="simPlayBtn" type="button" aria-label="Play or Stop Handshake Animation">
+        <svg class="icon-play-state" id="simPlayIcon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <span id="simPlayText">Play Ping-Pong</span>
+      </button>
+      <button class="sim-btn sim-btn-step" id="simStepBtn" type="button">Step ❯</button>
+      <button class="sim-btn sim-btn-reset" id="simResetBtn" type="button">Reset</button>
+    </div>
+
+    <div class="sim-metrics">
+      <div class="metric-box">
+        <span class="m-label">Round Trips</span>
+        <span class="m-val" id="simRttVal">0 RTT</span>
+      </div>
+      <div class="metric-box">
+        <span class="m-label">Time (at 50ms ping)</span>
+        <span class="m-val" id="simTimeVal">0 ms</span>
+      </div>
+      <div class="metric-box">
+        <span class="m-label">HTTP Data Flow</span>
+        <span class="m-val status-waiting" id="simDataStatus">Waiting...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- The Animated Angled Ladder Canvas -->
+  <div class="tls-sim-stage">
+    <div class="node-labels">
+      <div class="sim-node node-client">
+        <div class="node-icon">💻</div>
+        <div class="node-name">Client (Browser)</div>
+        <div class="node-line"></div>
+      </div>
+      <div class="sim-time-axis">
+        <span>▼ Time passes downward ▼</span>
+      </div>
+      <div class="sim-node node-server">
+        <div class="node-icon">🖥️</div>
+        <div class="node-name">Server (Website)</div>
+        <div class="node-line"></div>
+      </div>
+    </div>
+
+    <div class="sim-canvas-wrap">
+      <svg id="simSvg" viewBox="0 0 640 460" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <marker id="arrow-accent" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--accent, #3C5A77)" />
+          </marker>
+          <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#2e7d32" />
+          </marker>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Vertical Lifelines -->
+        <line x1="90" y1="20" x2="90" y2="445" stroke="var(--rule, #DCD7CE)" stroke-width="2" stroke-dasharray="4 4" />
+        <line x1="550" y1="20" x2="550" y2="445" stroke="var(--rule, #DCD7CE)" stroke-width="2" stroke-dasharray="4 4" />
+
+        <!-- Dynamic Handshake Flights will be rendered here -->
+        <g id="flightsGroup"></g>
+
+        <!-- Traveling Ping-Pong Packet Dot -->
+        <circle id="packetDot" r="9" cx="-100" cy="-100" fill="#ff7043" filter="url(#glow)" style="opacity: 0; transition: transform 0.05s linear;"></circle>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Live Step Explanation Box -->
+  <div class="tls-sim-explainer">
+    <div class="explainer-badge" id="simStepBadge">Step 0 / Ready</div>
+    <div class="explainer-text" id="simStepText">
+      Scroll into view to watch the angled packets travel, or click <strong>Play Ping-Pong</strong>.
+    </div>
+  </div>
+</div>
+
+<style>
+.tls-sim-wrapper {
+  margin: 2.2rem 0;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--paper-sunk);
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+}
+
+.tls-sim-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.tls-sim-title h4 {
+  margin: 4px 0 0;
+  font-family: var(--display);
+  font-size: 1.15rem;
+}
+
+.sim-badge {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 3px;
+}
+
+.tls-sim-tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--paper-sunk);
+  padding: 4px;
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+}
+
+.sim-tab {
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sim-tab.active {
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.tls-sim-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.sim-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.sim-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 5px;
+  font-family: var(--body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  transition: all 0.15s ease;
+}
+
+.sim-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.sim-btn-play {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.sim-btn-play:hover {
+  opacity: 0.9;
+  color: #fff;
+}
+
+.sim-btn-play.is-playing {
+  background: #d32f2f;
+  border-color: #d32f2f;
+  color: #fff;
+}
+
+.sim-btn-play.is-playing:hover {
+  background: #b71c1c;
+  border-color: #b71c1c;
+}
+
+.sim-metrics {
+  display: flex;
+  gap: 16px;
+}
+
+.metric-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.m-label {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+}
+
+.m-val {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.status-waiting { color: var(--ink-faint); }
+.status-success { color: #2e7d32; font-weight: 700; }
+
+.tls-sim-stage {
+  padding: 16px 18px 4px;
+  position: relative;
+}
+
+.node-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+}
+
+.sim-node {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sim-time-axis {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+}
+
+.sim-canvas-wrap {
+  width: 100%;
+}
+
+#simSvg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Flight Path Styling */
+.flight-line {
+  stroke-width: 2.5;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.flight-line.drawn {
+  stroke-dashoffset: 0;
+}
+
+.flight-label {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  fill: var(--ink);
+  font-weight: 600;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  paint-order: stroke fill;
+  stroke: var(--paper-sunk);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.flight-label.visible {
+  opacity: 1;
+}
+
+.flight-sublabel {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  fill: var(--ink-soft);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  paint-order: stroke fill;
+  stroke: var(--paper-sunk);
+  stroke-width: 4px;
+  stroke-linejoin: round;
+}
+
+.flight-sublabel.visible {
+  opacity: 1;
+}
+
+.tls-sim-explainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border-top: 1px solid var(--rule);
+}
+
+.explainer-badge {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  padding: 3px 8px;
+  background: var(--paper-sunk);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.explainer-text {
+  font-size: 0.875rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.explainer-text strong {
+  color: var(--ink);
+}
+</style>
+
+<script>
+(function() {
+  const configs = {
+    tls12: {
+      name: "TLS 1.2 Handshake (2 Full Round Trips)",
+      flights: [
+        {
+          from: "client", to: "server",
+          y1: 50, y2: 120,
+          label: "1. ClientHello ➔",
+          sub: "Offers cipher list, TLS 1.2, random nonce",
+          color: "var(--accent, #3C5A77)",
+          rtt: "0.5 RTT", time: "25 ms",
+          explain: "<strong>Flight 1 (Downwards Angle):</strong> The browser reaches out. It asks: <em>'Here are 50 ciphers I understand. Which one do you want?'</em> Notice the angled arrow: in real physics, packets take ~25ms to travel across the network."
+        },
+        {
+          from: "server", to: "client",
+          y1: 135, y2: 205,
+          label: "◀ 2. ServerHello + Cert + KeyExchange",
+          sub: "Picks cipher, sends Server Cert in CLEARTEXT",
+          color: "var(--accent, #3C5A77)",
+          rtt: "1.0 RTT", time: "50 ms",
+          explain: "<strong>Flight 2 (Ping-Pong back):</strong> The server responds! It picks a cipher and sends its SSL Certificate in <strong>cleartext</strong> (anyone watching can read it). 1 full round trip (1-RTT) is done, but no keys exist yet!"
+        },
+        {
+          from: "client", to: "server",
+          y1: 220, y2: 290,
+          label: "3. ClientKeyExchange + Finished ➔",
+          sub: "Computes master secret, switches to encrypted mode",
+          color: "var(--accent, #3C5A77)",
+          rtt: "1.5 RTT", time: "75 ms",
+          explain: "<strong>Flight 3 (Trip back to server):</strong> The browser verifies the certificate, creates key material, and tells the server: <em>'I am ready to encrypt now.'</em>"
+        },
+        {
+          from: "server", to: "client",
+          y1: 305, y2: 375,
+          label: "◀ 4. [ChangeCipherSpec] + Finished",
+          sub: "Server confirms handshake is verified",
+          color: "var(--accent, #3C5A77)",
+          rtt: "2.0 RTT", time: "100 ms",
+          explain: "<strong>Flight 4 (Trip back to client):</strong> Server confirms. The handshake is finally complete! Notice that <strong>2 full round trips (2-RTT / 100ms)</strong> were wasted just chatting about keys."
+        },
+        {
+          from: "client", to: "server",
+          y1: 385, y2: 420,
+          label: "5. HTTP GET /homepage ➔ (Application Data)",
+          sub: "Finally! The actual website data request",
+          color: "#2e7d32",
+          rtt: "2.5 RTT", time: "125 ms",
+          dataUnlocked: true,
+          explain: "🎉 <strong>Application Data Flows:</strong> Only now can the browser request the web page! Total delay before first byte: <strong>125ms+</strong>."
+        }
+      ]
+    },
+    tls13: {
+      name: "TLS 1.3 Handshake (1-RTT Fast-Track)",
+      flights: [
+        {
+          from: "client", to: "server",
+          y1: 60, y2: 170,
+          label: "1. ClientHello + Key Share (ECDHE) ➔",
+          sub: "Optimistic guess: sends Diffie-Hellman keys right away",
+          color: "var(--accent, #3C5A77)",
+          rtt: "0.5 RTT", time: "25 ms",
+          explain: "<strong>Flight 1 (Optimistic Key Share):</strong> In TLS 1.3, the browser does not wait! It immediately sends its <strong>Key Share</strong> (ECDHE parameters) on the very first packet. The ping-pong is already half done!"
+        },
+        {
+          from: "server", to: "client",
+          y1: 185, y2: 295,
+          label: "◀ 2. ServerHello + Key Share + Encrypted Cert & Finished",
+          sub: "Keys calculated! Certificate is 100% ENCRYPTED",
+          color: "var(--accent, #3C5A77)",
+          rtt: "1.0 RTT", time: "50 ms",
+          explain: "<strong>Flight 2 (Handshake Finished!):</strong> The server matches the key share. From here on, <strong>everything is encrypted</strong>, including the certificate! The handshake finishes in just 1 RTT."
+        },
+        {
+          from: "client", to: "server",
+          y1: 310, y2: 400,
+          label: "3. Finished + HTTP GET /homepage ➔",
+          sub: "Browser confirms and sends HTTP Data together!",
+          color: "#2e7d32",
+          rtt: "1.5 RTT", time: "75 ms",
+          dataUnlocked: true,
+          explain: "🚀 <strong>Application Data in Flight 3!</strong> The browser sends its confirmation AND its first HTTP request in the exact same packet. <strong>Latency cut in half compared to TLS 1.2!</strong>"
+        }
+      ]
+    },
+    tls13_0rtt: {
+      name: "TLS 1.3 0-RTT (Instant Resumption)",
+      flights: [
+        {
+          from: "client", to: "server",
+          y1: 80, y2: 210,
+          label: "1. ClientHello (PSK) + Early Data (HTTP GET) ➔",
+          sub: "0-RTT! Sends encrypted website request ON FIRST PACKET",
+          color: "#2e7d32",
+          rtt: "0.0 RTT", time: "0 ms",
+          dataUnlocked: true,
+          explain: "⚡ <strong>0-RTT Early Data!</strong> Returning visitor: the browser remembers the server's Pre-Shared Key (PSK). It encrypts the HTTP request and shoots it across <strong>immediately on packet #1 with ZERO round-trip delay!</strong>"
+        },
+        {
+          from: "server", to: "client",
+          y1: 225, y2: 355,
+          label: "◀ 2. ServerHello + Finished + HTTP 200 OK Response",
+          sub: "Server answers handshake and delivers website page",
+          color: "#2e7d32",
+          rtt: "1.0 RTT", time: "50 ms",
+          dataUnlocked: true,
+          explain: "🎉 <strong>Zero Waiting:</strong> Server decrypts the early request, finishes the session, and returns the webpage response immediately! Unmatched mobile speed."
+        }
+      ]
+    }
+  };
+
+  let currentProto = "tls12";
+  let currentStep = -1;
+  let isPlaying = false;
+  let playTimer = null;
+  let userManuallyStopped = false;
+  let hasAutoPlayedOnScroll = false;
+
+  const flightsGroup = document.getElementById("flightsGroup");
+  const packetDot = document.getElementById("packetDot");
+  const rttVal = document.getElementById("simRttVal");
+  const timeVal = document.getElementById("simTimeVal");
+  const dataStatus = document.getElementById("simDataStatus");
+  const stepBadge = document.getElementById("simStepBadge");
+  const stepText = document.getElementById("simStepText");
+  const playBtn = document.getElementById("simPlayBtn");
+  const playIcon = document.getElementById("simPlayIcon");
+  const playText = document.getElementById("simPlayText");
+  const stepBtn = document.getElementById("simStepBtn");
+  const resetBtn = document.getElementById("simResetBtn");
+  const tabs = document.querySelectorAll(".sim-tab");
+  const simWrapper = document.getElementById("tlsSimulator");
+
+  function renderStaticFlights() {
+    flightsGroup.innerHTML = "";
+    const cfg = configs[currentProto];
+    const flights = cfg.flights;
+
+    flights.forEach((f, idx) => {
+      const isClientToServer = f.from === "client";
+      const x1 = isClientToServer ? 90 : 550;
+      const x2 = isClientToServer ? 550 : 90;
+      const marker = f.color === "#2e7d32" ? "url(#arrow-green)" : "url(#arrow-accent)";
+
+      // Diagonal Flight Path Line
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", x1);
+      line.setAttribute("y1", f.y1);
+      line.setAttribute("x2", x2);
+      line.setAttribute("y2", f.y2);
+      line.setAttribute("stroke", f.color);
+      line.setAttribute("marker-end", marker);
+      line.setAttribute("class", "flight-line");
+      line.setAttribute("id", "flight-line-" + idx);
+      flightsGroup.appendChild(line);
+
+      // Exact midpoint Y of the slanted arrow
+      const arrowMidY = (f.y1 + f.y2) / 2;
+      const midX = (x1 + x2) / 2;
+
+      // Both labels positioned cleanly ABOVE the arrow line
+      const mainY = arrowMidY - 20; // 20px strictly above the line
+      const subY = arrowMidY - 6;   // 6px strictly above the line
+
+      const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      text.setAttribute("x", midX);
+      text.setAttribute("y", mainY);
+      text.setAttribute("text-anchor", "middle");
+      text.setAttribute("class", "flight-label");
+      text.setAttribute("id", "flight-label-" + idx);
+      text.textContent = f.label;
+      flightsGroup.appendChild(text);
+
+      const sub = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      sub.setAttribute("x", midX);
+      sub.setAttribute("y", subY);
+      sub.setAttribute("text-anchor", "middle");
+      sub.setAttribute("class", "flight-sublabel");
+      sub.setAttribute("id", "flight-sub-" + idx);
+      sub.textContent = f.sub;
+      flightsGroup.appendChild(sub);
+    });
+  }
+
+  function resetSimulator(cleanStop = true) {
+    if (cleanStop) {
+      pause();
+    }
+    currentStep = -1;
+    packetDot.style.opacity = "0";
+    rttVal.textContent = "0 RTT";
+    timeVal.textContent = "0 ms";
+    dataStatus.className = "m-val status-waiting";
+    dataStatus.textContent = "Waiting...";
+    stepBadge.textContent = "Step 0 / Ready";
+    stepText.innerHTML = "Auto-playing ping-pong handshake. Click <strong>Stop Ping-Pong</strong> anytime to pause.";
+
+    document.querySelectorAll(".flight-line").forEach(l => l.classList.remove("drawn"));
+    document.querySelectorAll(".flight-label, .flight-sublabel").forEach(t => t.classList.remove("visible"));
+  }
+
+  function softResetForLoop() {
+    currentStep = -1;
+    packetDot.style.opacity = "0";
+    document.querySelectorAll(".flight-line").forEach(l => l.classList.remove("drawn"));
+    document.querySelectorAll(".flight-label, .flight-sublabel").forEach(t => t.classList.remove("visible"));
+    rttVal.textContent = "0 RTT";
+    timeVal.textContent = "0 ms";
+    dataStatus.className = "m-val status-waiting";
+    dataStatus.textContent = "Looping...";
+  }
+
+  function animatePacket(x1, y1, x2, y2, color, duration, callback) {
+    packetDot.setAttribute("fill", color);
+    packetDot.style.opacity = "1";
+    const startTime = performance.now();
+
+    function step(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Linear interpolation along angled path
+      const curX = x1 + (x2 - x1) * progress;
+      const curY = y1 + (y2 - y1) * progress;
+
+      packetDot.setAttribute("cx", curX);
+      packetDot.setAttribute("cy", curY);
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      } else {
+        if (callback) callback();
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function runStep(stepIdx, autoNext = false) {
+    const cfg = configs[currentProto];
+    if (stepIdx >= cfg.flights.length) {
+      return;
+    }
+
+    currentStep = stepIdx;
+    const f = cfg.flights[stepIdx];
+    const isClientToServer = f.from === "client";
+    const x1 = isClientToServer ? 90 : 550;
+    const x2 = isClientToServer ? 550 : 90;
+
+    // Draw the path
+    const line = document.getElementById("flight-line-" + stepIdx);
+    const label = document.getElementById("flight-label-" + stepIdx);
+    const sub = document.getElementById("flight-sub-" + stepIdx);
+
+    if (line) line.classList.add("drawn");
+
+    animatePacket(x1, f.y1, x2, f.y2, f.color === "#2e7d32" ? "#2e7d32" : "#ff7043", 600, () => {
+      if (label) label.classList.add("visible");
+      if (sub) sub.classList.add("visible");
+
+      rttVal.textContent = f.rtt;
+      timeVal.textContent = f.time;
+      stepBadge.textContent = `Flight ${stepIdx + 1} / ${cfg.flights.length}`;
+      stepText.innerHTML = f.explain;
+
+      if (f.dataUnlocked) {
+        dataStatus.className = "m-val status-success";
+        dataStatus.textContent = "Active (Encrypted)!";
+      }
+
+      if (autoNext && isPlaying) {
+        playTimer = setTimeout(() => {
+          if (!isPlaying) return;
+          if (currentStep + 1 < cfg.flights.length) {
+            runStep(currentStep + 1, true);
+          } else {
+            // Loop automatically until user stops!
+            playTimer = setTimeout(() => {
+              if (isPlaying) {
+                softResetForLoop();
+                runStep(0, true);
+              }
+            }, 1800);
+          }
+        }, 900);
+      }
+    });
+  }
+
+  function play() {
+    isPlaying = true;
+    playBtn.classList.add("is-playing");
+    playText.textContent = "Stop Ping-Pong";
+    playIcon.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'; // Pause/Stop Icon
+
+    if (currentStep >= configs[currentProto].flights.length - 1) {
+      resetSimulator(false);
+    }
+    runStep(currentStep + 1, true);
+  }
+
+  function pause() {
+    isPlaying = false;
+    playBtn.classList.remove("is-playing");
+    playText.textContent = "Play Ping-Pong";
+    playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>'; // Play Icon
+    if (playTimer) clearTimeout(playTimer);
+  }
+
+  playBtn.addEventListener("click", () => {
+    if (isPlaying) {
+      userManuallyStopped = true;
+      pause();
+    } else {
+      userManuallyStopped = false; // User restarted manually
+      play();
+    }
+  });
+
+  stepBtn.addEventListener("click", () => {
+    userManuallyStopped = true;
+    pause();
+    if (currentStep + 1 < configs[currentProto].flights.length) {
+      runStep(currentStep + 1, false);
+    }
+  });
+
+  resetBtn.addEventListener("click", () => {
+    userManuallyStopped = true;
+    resetSimulator(true);
+  });
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      currentProto = tab.getAttribute("data-proto");
+      userManuallyStopped = true;
+      renderStaticFlights();
+      resetSimulator(true);
+    });
+  });
+
+  // IntersectionObserver: auto-play on scroll into view on first load until user stops
+  function setupScrollAutoPlay() {
+    if (!('IntersectionObserver' in window)) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !hasAutoPlayedOnScroll && !userManuallyStopped) {
+          hasAutoPlayedOnScroll = true;
+          if (!isPlaying) {
+            play();
+          }
+        }
+      });
+    }, {
+      threshold: 0.35 // Triggers when 35% of the simulator is visible
+    });
+
+    if (simWrapper) {
+      observer.observe(simWrapper);
+    }
+  }
+
+  renderStaticFlights();
+  setupScrollAutoPlay();
+})();
+</script>

@@ -2,7 +2,8 @@
 Charts as HTML and CSS. No library, no JS, no SVG maths — bar lengths are
 percentage widths, so they reflow with the column and follow the theme tokens.
 
-  type="bars"     one value per label
+  type="bars"     one value per label (horizontal)
+  type="columns"  vertical column bars per label
   type="grouped"  two or more series per label
   type="split"    one 100% stacked bar
 
@@ -51,6 +52,38 @@ See the parameter list in the authoring brief.
               </div>
             {% endfor %}
           </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if include.note %}<p class="chart-note">{{ include.note }}</p>{% endif %}
+  </figure>
+
+{% elsif include.type == "columns" or include.type == "vertical" %}
+  {% assign values = include.values | split: "|" %}
+  {% assign max = 0 %}
+  {% for v in values %}
+    {% assign f = v | plus: 0.0 %}
+    {% if f > max %}{% assign max = f %}{% endif %}
+  {% endfor %}
+  {% if include.scale %}{% assign max = include.scale | plus: 0.0 %}{% endif %}
+
+  <figure class="chart chart-columns">
+    {% if include.title %}<figcaption class="chart-title">{{ include.title }}</figcaption>{% endif %}
+
+    <div class="column-chart-body">
+      {% for label in labels %}
+        {% assign v = values[forloop.index0] %}
+        {% assign f = v | plus: 0.0 %}
+        {% assign pct = f | times: 100.0 | divided_by: max %}
+        {% assign hi = false %}
+        {% if include.highlight == label %}{% assign hi = true %}{% endif %}
+        <div class="col-item{% if hi %} hi{% endif %}">
+          <div class="col-val-top">{{ unit }}{{ v }}{{ suffix }}</div>
+          <div class="col-track">
+            <i class="col-fill s1" style="height: {{ pct }}%"></i>
+          </div>
+          <div class="col-label">{{ label }}</div>
         </div>
       {% endfor %}
     </div>

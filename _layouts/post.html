@@ -58,3 +58,66 @@ layout: default
   </div>
 
 </article>
+
+{% if page.mermaid %}
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+  function initMermaid() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark' || 
+                   (!document.documentElement.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const textColor = isDark ? '#EDE9E1' : '#1A1A1A';
+    const bgColor = isDark ? '#121110' : '#FAF9F7';
+    const altBgColor = isDark ? '#1A1917' : '#F1EEE9';
+    const accentColor = isDark ? '#8FB2D0' : '#3C5A77';
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: {
+        darkMode: isDark,
+        fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
+        primaryColor: altBgColor,
+        primaryTextColor: textColor,
+        primaryBorderColor: accentColor,
+        lineColor: textColor,
+        secondaryColor: bgColor,
+        tertiaryColor: altBgColor,
+        mainBkg: altBgColor,
+        secondBkg: bgColor,
+        textColor: textColor,
+        signalColor: textColor,
+        signalTextColor: textColor,
+        labelBoxBkgColor: altBgColor,
+        labelBoxBorderColor: accentColor,
+        labelTextColor: textColor,
+        loopTextColor: textColor,
+        noteBorderColor: accentColor,
+        noteBkgColor: altBgColor,
+        noteTextColor: textColor,
+        activationBorderColor: accentColor,
+        activationBkgColor: altBgColor,
+        sequenceNumberColor: isDark ? '#121110' : '#ffffff'
+      }
+    });
+    document.querySelectorAll('pre code.language-mermaid, div.mermaid').forEach(async (el, idx) => {
+      const parent = el.closest('pre') || el;
+      const graphDefinition = el.textContent.trim();
+      try {
+        const id = 'mermaid-svg-' + idx;
+        const { svg } = await mermaid.render(id, graphDefinition);
+        const container = document.createElement('div');
+        container.className = 'mermaid-wrapper';
+        container.innerHTML = svg;
+        parent.parentNode.replaceChild(container, parent);
+      } catch (e) {
+        console.error('Mermaid render error', e);
+      }
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMermaid);
+  } else {
+    initMermaid();
+  }
+</script>
+{% endif %}

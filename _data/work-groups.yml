@@ -6,11 +6,11 @@
 
 - label: "AI & automation"
   slug: ai
-  tags: [llm, automation, benchmark, browser, chrome-extension]
+  tags: [llm, automation, benchmark, browser]
 
-- label: "Web"
+- label: "Web & extensions"
   slug: web
-  tags: [web, laravel, wordpress]
+  tags: [web, laravel, wordpress, chrome-extension]
 
 - label: "Mobile"
   slug: mobile

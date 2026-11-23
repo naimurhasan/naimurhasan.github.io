@@ -31,8 +31,8 @@
       <div class="work-row">
 
         {% if p.image %}
-        <a class="shot" {% if p.link %}href="{% if p.private %}{{ p.link | relative_url }}{% else %}{{ p.link }}{% endif %}"{% endif %} tabindex="-1" aria-hidden="true">
-          <img src="{{ p.image | relative_url }}" alt="" width="320" height="240" loading="lazy" decoding="async">
+        <a class="shot{% if p.logo %} islogo{% endif %}" {% if p.link %}href="{% if p.private %}{{ p.link | relative_url }}{% else %}{{ p.link }}{% endif %}"{% endif %} tabindex="-1" aria-hidden="true">
+          <img src="{{ p.image | relative_url }}" alt="" width="{% if p.logo %}128{% else %}320{% endif %}" height="{% if p.logo %}128{% else %}240{% endif %}" loading="lazy" decoding="async">
         </a>
         {% else %}
         <span class="shot noshot" aria-hidden="true">{{ p.title | slice: 0 }}</span>

@@ -1,7 +1,4 @@
 {% assign projects = site.projects | sort: 'year' | reverse %}
-{% assign all_tags = '' | split: '' %}
-{% for p in projects %}{% assign all_tags = all_tags | concat: p.tags %}{% endfor %}
-{% assign all_tags = all_tags | uniq | sort %}
 
 <section class="section col" id="work" data-cap="6">
   <div class="section-head">
@@ -9,29 +6,41 @@
     <span class="kicker">{{ projects | size }} projects</span>
   </div>
 
-  <div class="pills" id="workPills" role="group" aria-label="Filter projects by tag">
+  <div class="pills" id="workPills" role="group" aria-label="Filter projects by area">
     <button class="pill" type="button" data-tag="all" aria-pressed="true">all<span class="n">{{ projects | size }}</span></button>
-    {% for tag in all_tags %}
+    {% for group in site.data.work-groups %}
       {% assign n = 0 %}
-      {% for p in projects %}{% if p.tags contains tag %}{% assign n = n | plus: 1 %}{% endif %}{% endfor %}
-      <button class="pill" type="button" data-tag="{{ tag }}" aria-pressed="false">{{ tag }}<span class="n">{{ n }}</span></button>
+      {% for p in projects %}
+        {% assign hit = false %}
+        {% for t in group.tags %}{% if p.tags contains t %}{% assign hit = true %}{% endif %}{% endfor %}
+        {% if hit %}{% assign n = n | plus: 1 %}{% endif %}
+      {% endfor %}
+      {% if n > 0 %}
+      <button class="pill" type="button" data-tag="{{ group.slug }}" aria-pressed="false">{{ group.label }}<span class="n">{{ n }}</span></button>
+      {% endif %}
     {% endfor %}
   </div>
 
   <ul class="work-list" id="workList">
     {% for p in projects %}
-    <li data-tags="{{ p.tags | join: ' ' }}">
+    {% assign mine = '' | split: '' %}
+    {% for group in site.data.work-groups %}
+      {% for t in group.tags %}{% if p.tags contains t %}{% assign mine = mine | push: group.slug %}{% break %}{% endif %}{% endfor %}
+    {% endfor %}
+    <li data-tags="{{ mine | uniq | join: ' ' }}">
       <div class="work-row">
 
         {% if p.image %}
-        <a class="shot" {% if p.link %}href="{{ p.link }}"{% endif %} tabindex="-1" aria-hidden="true">
+        <a class="shot" {% if p.link %}href="{% if p.private %}{{ p.link | relative_url }}{% else %}{{ p.link }}{% endif %}"{% endif %} tabindex="-1" aria-hidden="true">
           <img src="{{ p.image | relative_url }}" alt="" width="320" height="240" loading="lazy" decoding="async">
         </a>
+        {% else %}
+        <span class="shot noshot" aria-hidden="true">{{ p.title | slice: 0 }}</span>
         {% endif %}
 
         <div class="work-body">
           <div class="work-top">
-            <h3>{% if p.link %}<a href="{{ p.link }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</h3>
+            <h3>{% if p.link %}<a href="{% if p.private %}{{ p.link | relative_url }}{% else %}{{ p.link }}{% endif %}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</h3>
             <span class="year">{{ p.year }}</span>
           </div>
 
@@ -40,9 +49,10 @@
           <div class="work-meta">
             <span class="stack">
               {% for tag in p.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+              {% if p.private %}<span class="tag private">private</span>{% endif %}
             </span>
             {% if p.link %}
-            <a class="golink" href="{{ p.link }}">
+            <a class="golink" href="{% if p.private %}{{ p.link | relative_url }}{% else %}{{ p.link }}{% endif %}">
               {% include icon.html name=p.platform %}{{ p.link_label | default: 'Visit' }}
             </a>
             {% endif %}

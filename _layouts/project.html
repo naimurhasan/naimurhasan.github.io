@@ -1,0 +1,26 @@
+---
+layout: default
+---
+<article class="article col">
+
+  <p class="meta">
+    {% if page.status %}<span>{% include icon.html name="tag" %}{{ page.status }}</span>{% endif %}
+    {% if page.years %}<span>{% include icon.html name="calendar" %}{{ page.years }}</span>{% endif %}
+    {% if page.stack %}<span>{% include icon.html name="external" %}{{ page.stack }}</span>{% endif %}
+  </p>
+
+  <h1>{{ page.title }}</h1>
+  {% if page.standfirst %}<p class="standfirst">{{ page.standfirst }}</p>{% endif %}
+
+  <div class="content">
+    {{ content }}
+  </div>
+
+  <div class="article-foot">
+    <div class="list-foot" style="margin-top: 0">
+      <a class="more-link" href="{{ '/#work' | relative_url }}">&larr; All work</a>
+      <a class="feed-link" href="{{ '/#contact' | relative_url }}">{% include icon.html name="mail" %}Ask about this project</a>
+    </div>
+  </div>
+
+</article>

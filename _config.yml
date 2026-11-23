@@ -241,6 +241,7 @@ include:
   - .htaccess
   - _pages
   - blog
+  - work
 # exclude - simply Exclude directories and/or files from the conversion.
 # These exclusions are relative to the site's source directory and cannot
 # be outside the source directory.

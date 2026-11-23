@@ -1,0 +1,21 @@
+# Filter groups for the Work section. Each project keeps its own detailed
+# tags on the card; these only drive the pills.
+- label: "Scraping & data"
+  slug: scraping
+  tags: [scraping, data, api]
+
+- label: "AI & automation"
+  slug: ai
+  tags: [llm, automation, benchmark, browser, chrome-extension]
+
+- label: "Web"
+  slug: web
+  tags: [web, laravel, wordpress]
+
+- label: "Mobile"
+  slug: mobile
+  tags: [mobile, flutter]
+
+- label: "Systems & IoT"
+  slug: systems
+  tags: [rust, networking, iot]

@@ -11,7 +11,7 @@ tags:
 - security
 categories:
 - Networking
-- Bot Detection
+- Bot-Detection
 author: Naimur Hasan
 mermaid: true
 header:

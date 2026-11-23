@@ -11,8 +11,8 @@ tags:
 - chromium
 - automation
 categories:
-- Web Scraping
-- Browser Fingerprinting
+- Web-Scraping
+- Browser-Fingerprinting
 author: Naimur Hasan
 mermaid: true
 header:

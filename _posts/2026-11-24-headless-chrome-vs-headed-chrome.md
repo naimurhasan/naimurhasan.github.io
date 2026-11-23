@@ -12,7 +12,7 @@ tags:
 - web-scraping
 categories:
 - Chromium
-- Browser Fingerprinting
+- Browser-Fingerprinting
 author: Naimur Hasan
 mermaid: true
 header:

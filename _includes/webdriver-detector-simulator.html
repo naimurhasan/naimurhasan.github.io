@@ -1,0 +1,461 @@
+<div class="webdriver-sim-wrapper" id="webdriverSimulator">
+  <div class="webdriver-sim-header">
+    <div class="webdriver-sim-title">
+      <span class="sim-badge">Interactive Demo</span>
+      <h4>Browser Automation Fingerprint Scanner</h4>
+    </div>
+    <div class="webdriver-sim-tabs" role="tablist">
+      <button class="wd-tab active" data-mode="vanilla" type="button">Vanilla Puppeteer</button>
+      <button class="wd-tab" data-mode="naive" type="button">Naive Overwrite</button>
+      <button class="wd-tab" data-mode="human" type="button">Real Chrome</button>
+    </div>
+  </div>
+
+  <div class="webdriver-sim-toolbar">
+    <div class="sim-controls">
+      <button class="sim-btn sim-btn-play" id="wdScanBtn" type="button">
+        <svg class="icon-scan" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <span id="wdScanText">Run Fingerprint Audit</span>
+      </button>
+      <button class="sim-btn" id="wdResetBtn" type="button">Reset</button>
+    </div>
+
+    <div class="wd-verdict-box" id="wdVerdictBox">
+      <span class="verdict-label">Anti-Bot Verdict</span>
+      <span class="verdict-status status-idle" id="wdVerdictStatus">Awaiting Scan...</span>
+    </div>
+  </div>
+
+  <div class="webdriver-sim-body">
+    <div class="scan-tests-grid" id="wdTestsGrid">
+      <!-- Test Cards -->
+      <div class="scan-test-item" id="test-row-0">
+        <div class="test-header">
+          <span class="test-num">01</span>
+          <span class="test-name">navigator.webdriver Value</span>
+        </div>
+        <div class="test-output" id="test-val-0">--</div>
+        <div class="test-status" id="test-stat-0"><span class="pill pill-info">Pending</span></div>
+      </div>
+
+      <div class="scan-test-item" id="test-row-1">
+        <div class="test-header">
+          <span class="test-num">02</span>
+          <span class="test-name">Prototype Getter Integrity</span>
+        </div>
+        <div class="test-output" id="test-val-1">--</div>
+        <div class="test-status" id="test-stat-1"><span class="pill pill-info">Pending</span></div>
+      </div>
+
+      <div class="scan-test-item" id="test-row-2">
+        <div class="test-header">
+          <span class="test-num">03</span>
+          <span class="test-name">window.chrome.runtime Object</span>
+        </div>
+        <div class="test-output" id="test-val-2">--</div>
+        <div class="test-status" id="test-stat-2"><span class="pill pill-info">Pending</span></div>
+      </div>
+
+      <div class="scan-test-item" id="test-row-3">
+        <div class="test-header">
+          <span class="test-num">04</span>
+          <span class="test-name">navigator.plugins Array</span>
+        </div>
+        <div class="test-output" id="test-val-3">--</div>
+        <div class="test-status" id="test-stat-3"><span class="pill pill-info">Pending</span></div>
+      </div>
+
+      <div class="scan-test-item" id="test-row-4">
+        <div class="test-header">
+          <span class="test-num">05</span>
+          <span class="test-name">Permissions API Query</span>
+        </div>
+        <div class="test-output" id="test-val-4">--</div>
+        <div class="test-status" id="test-stat-4"><span class="pill pill-info">Pending</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="webdriver-sim-explainer">
+    <div class="explainer-badge" id="wdStepBadge">Inspection Summary</div>
+    <div class="explainer-text" id="wdStepText">
+      Click <strong>Run Fingerprint Audit</strong> or scroll into view to see how anti-bot sensors inspect browser internals.
+    </div>
+  </div>
+</div>
+
+<style>
+.webdriver-sim-wrapper {
+  margin: 2.2rem 0;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--paper-sunk);
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+}
+
+.webdriver-sim-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.webdriver-sim-title h4 {
+  margin: 4px 0 0;
+  font-family: var(--display);
+  font-size: 1.15rem;
+}
+
+.webdriver-sim-tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--paper-sunk);
+  padding: 4px;
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+}
+
+.wd-tab {
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.wd-tab.active {
+  background: var(--paper);
+  color: var(--ink);
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.webdriver-sim-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.wd-verdict-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.verdict-label {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  letter-spacing: 0.05em;
+}
+
+.verdict-status {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.verdict-status.status-idle { color: var(--ink-soft); }
+.verdict-status.status-bot { color: #d32f2f; }
+.verdict-status.status-human { color: #2e7d32; }
+
+.webdriver-sim-body {
+  padding: 18px;
+}
+
+.scan-tests-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.scan-test-item {
+  display: grid;
+  grid-template-columns: 2fr 3fr 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  transition: all 0.2s ease;
+}
+
+@media (max-width: 640px) {
+  .scan-test-item {
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+  .test-output {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+}
+
+.test-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.test-num {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.test-name {
+  font-family: var(--body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.test-output {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+  word-break: break-all;
+}
+
+.webdriver-sim-explainer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border-top: 1px solid var(--rule);
+}
+</style>
+
+<script>
+(function() {
+  const modes = {
+    vanilla: {
+      name: "Vanilla Puppeteer / Selenium",
+      verdictText: "🚨 100% BOT DETECTED (Blocked)",
+      verdictClass: "status-bot",
+      tests: [
+        {
+          val: "true",
+          stat: "FAIL",
+          pill: "pill-bad",
+          explain: "<code>navigator.webdriver === true</code> is set by default in automated Chromium. Instant flag for Cloudflare and DataDome."
+        },
+        {
+          val: "native getter (returns true)",
+          stat: "FAIL",
+          pill: "pill-bad",
+          explain: "The native descriptor on <code>Navigator.prototype</code> confirms the automation flag is enabled by the binary."
+        },
+        {
+          val: "undefined (missing object)",
+          stat: "FAIL",
+          pill: "pill-bad",
+          explain: "Vanilla headless Chromium lacks <code>window.chrome.runtime</code>, which real Chrome installations always possess."
+        },
+        {
+          val: "length: 0 (empty)",
+          stat: "FAIL",
+          pill: "pill-bad",
+          explain: "Real desktop Chrome always has built-in PDF plugins; 0 plugins indicates a headless environment."
+        },
+        {
+          val: "Notification.permission: 'denied'",
+          stat: "FAIL",
+          pill: "pill-bad",
+          explain: "Headless Chrome returns contradictory permissions states (e.g. prompt state vs default denial)."
+        }
+      ],
+      summary: "🚨 <strong>Verdict: Instant Bot Flag.</strong> Vanilla Puppeteer broadcasts its automation status in 5 separate APIs. Anti-bot firewalls block this without even solving a CAPTCHA."
+    },
+    naive: {
+      name: "Naive Overwrite (Object.defineProperty)",
+      verdictText: "🚨 TAMPERING DETECTED (Prototype Spoof)",
+      verdictClass: "status-bot",
+      tests: [
+        {
+          val: "false (tampered)",
+          stat: "WARN",
+          pill: "pill-warn",
+          explain: "Value returned false, but anti-bot scripts don't just check the value — they inspect prototype integrity."
+        },
+        {
+          val: "has own property (not on prototype!)",
+          stat: "FAIL",
+          pill: "pill-bad",
+          explain: "<code>Object.getOwnPropertyDescriptor(navigator, 'webdriver')</code> revealed an injected override. Dead giveaway."
+        },
+        {
+          val: "{ id: undefined } (mocked object)",
+          stat: "WARN",
+          pill: "pill-warn",
+          explain: "The mock object fails <code>Object.prototype.toString.call(chrome.runtime)</code> inspection."
+        },
+        {
+          val: "PluginArray [fake plugins]",
+          stat: "WARN",
+          pill: "pill-warn",
+          explain: "Fake plugins lack real <code>MimeType</code> prototypes and fail prototype traversal tests."
+        },
+        {
+          val: "Inconsistent state",
+          stat: "FAIL",
+          pill: "pill-bad",
+          explain: "Contradictory prototype behavior triggers heuristic anomaly scoring."
+        }
+      ],
+      summary: "🚨 <strong>Verdict: Spoofing Caught.</strong> Naive property overwrites create obvious JavaScript prototype anomalies. Anti-bot scripts detect the evasion attempt itself."
+    },
+    human: {
+      name: "Real Human Chrome (Clean Profile)",
+      verdictText: "✅ 100% VERIFIED HUMAN BROWSER",
+      verdictClass: "status-human",
+      tests: [
+        {
+          val: "undefined (or false on Navigator.prototype)",
+          stat: "PASS",
+          pill: "pill-good",
+          explain: "Standard browser state: no automation flag active."
+        },
+        {
+          val: "native code getter on Navigator.prototype",
+          stat: "PASS",
+          pill: "pill-good",
+          explain: "Descriptor is strictly native with unadulterated prototype chain."
+        },
+        {
+          val: "Object [chrome.runtime present]",
+          stat: "PASS",
+          pill: "pill-good",
+          explain: "Legitimate Chrome runtime object present."
+        },
+        {
+          val: "length: 5 (PDF Viewer, Native Client)",
+          stat: "PASS",
+          pill: "pill-good",
+          explain: "Natural plugin array matching real OS desktop environment."
+        },
+        {
+          val: "Notification.permission: 'default'",
+          stat: "PASS",
+          pill: "pill-good",
+          explain: "Consistent notification and permission states."
+        }
+      ],
+      summary: "✅ <strong>Verdict: Human Authenticated.</strong> All prototypes, descriptors, and environmental signals match authentic human browsing. Request passes effortlessly."
+    }
+  };
+
+  let currentMode = "vanilla";
+  let isScanning = false;
+  let scanTimer = null;
+  let hasAutoScanned = false;
+
+  const tabs = document.querySelectorAll(".wd-tab");
+  const scanBtn = document.getElementById("wdScanBtn");
+  const scanText = document.getElementById("wdScanText");
+  const resetBtn = document.getElementById("wdResetBtn");
+  const verdictStatus = document.getElementById("wdVerdictStatus");
+  const stepBadge = document.getElementById("wdStepBadge");
+  const stepText = document.getElementById("wdStepText");
+  const wrapper = document.getElementById("webdriverSimulator");
+
+  function resetUi() {
+    clearTimeout(scanTimer);
+    isScanning = false;
+    scanText.textContent = "Run Fingerprint Audit";
+    scanBtn.classList.remove("is-playing");
+    verdictStatus.className = "verdict-status status-idle";
+    verdictStatus.textContent = "Awaiting Scan...";
+    stepBadge.textContent = "Inspection Summary";
+    stepText.innerHTML = "Click <strong>Run Fingerprint Audit</strong> to inspect this configuration.";
+
+    for (let i = 0; i < 5; i++) {
+      document.getElementById("test-val-" + i).textContent = "--";
+      document.getElementById("test-stat-" + i).innerHTML = '<span class="pill pill-info">Pending</span>';
+    }
+  }
+
+  function runAudit() {
+    isScanning = true;
+    scanBtn.classList.add("is-playing");
+    scanText.textContent = "Scanning...";
+    const data = modes[currentMode];
+    let step = 0;
+
+    function nextTest() {
+      if (step < 5) {
+        const t = data.tests[step];
+        const valEl = document.getElementById("test-val-" + step);
+        const statEl = document.getElementById("test-stat-" + step);
+
+        valEl.textContent = t.val;
+        statEl.innerHTML = `<span class="pill ${t.pill}">${t.stat}</span>`;
+        stepBadge.textContent = `Test ${step + 1} / 5 Checked`;
+        stepText.innerHTML = t.explain;
+
+        step++;
+        scanTimer = setTimeout(nextTest, 450);
+      } else {
+        isScanning = false;
+        scanBtn.classList.remove("is-playing");
+        scanText.textContent = "Run Again";
+        verdictStatus.className = "verdict-status " + data.verdictClass;
+        verdictStatus.textContent = data.verdictText;
+        stepBadge.textContent = "Final Verdict";
+        stepText.innerHTML = data.summary;
+      }
+    }
+    nextTest();
+  }
+
+  scanBtn.addEventListener("click", () => {
+    if (isScanning) return;
+    runAudit();
+  });
+
+  resetBtn.addEventListener("click", resetUi);
+
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      tabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      currentMode = tab.getAttribute("data-mode");
+      resetUi();
+      runAudit();
+    });
+  });
+
+  // Auto-play on first scroll into view
+  function setupAutoScan() {
+    if (!('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !hasAutoScanned) {
+          hasAutoScanned = true;
+          runAudit();
+        }
+      });
+    }, { threshold: 0.35 });
+
+    if (wrapper) observer.observe(wrapper);
+  }
+
+  setupAutoScan();
+})();
+</script>

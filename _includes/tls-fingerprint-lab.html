@@ -1,0 +1,713 @@
+<div class="tlab-wrapper" id="tlsLab">
+  <div class="tlab-header">
+    <div class="tlab-title">
+      <span class="tlab-badge">Interactive Lab</span>
+      <h4>Naimur's TLS Test for Dummies</h4>
+      <p class="tlab-sub">Drag the parts into the <code>ClientHello</code>, then see how a WAF would classify the client you just built.</p>
+    </div>
+  </div>
+
+  <div class="tlab-presets">
+    <span class="tlab-presets-label">Load a real client</span>
+    <div class="tlab-preset-row" id="tlabPresets"></div>
+    <button class="tlab-btn tlab-btn-ghost" id="tlabReset" type="button">Clear slots</button>
+  </div>
+
+  <div class="tlab-board">
+    <div class="tlab-palette" id="tlabPalette"></div>
+
+    <div class="tlab-packet">
+      <div class="tlab-packet-head">
+        <span class="pill pill-info">Layer 5/6 Record</span>
+        <strong>ClientHello under construction</strong>
+      </div>
+      <div class="tlab-slots" id="tlabSlots"></div>
+    </div>
+  </div>
+
+  <div class="tlab-readout">
+    <div class="tlab-hashes">
+      <div class="tlab-hash">
+        <span class="tlab-hash-label">JA4_a prefix</span>
+        <code id="tlabJa4">—</code>
+      </div>
+      <div class="tlab-hash">
+        <span class="tlab-hash-label">JA3 hash (simulated)</span>
+        <code id="tlabJa3">—</code>
+      </div>
+    </div>
+    <div class="tlab-verdict" id="tlabVerdict">
+      <div class="tlab-verdict-head">
+        <span class="tlab-verdict-tag" id="tlabVerdictTag">Awaiting input</span>
+        <strong id="tlabVerdictTitle">Fill all seven slots to run the detection engine</strong>
+      </div>
+      <ul class="tlab-rules" id="tlabRules"></ul>
+    </div>
+  </div>
+</div>
+
+<style>
+.tlab-wrapper {
+  margin: 2.2rem 0;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--paper-sunk);
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+}
+
+.tlab-header {
+  padding: 14px 18px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+
+.tlab-badge {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 6px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 3px;
+}
+
+.tlab-title h4 {
+  margin: 6px 0 0;
+  font-family: var(--display);
+  font-size: 1.15rem;
+}
+
+.tlab-sub {
+  margin: 4px 0 0;
+  font-size: 0.8125rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.tlab-presets {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.tlab-presets-label {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+}
+
+.tlab-preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+}
+
+.tlab-btn {
+  font-family: var(--body);
+  font-size: 0.75rem;
+  padding: 6px 11px;
+  border-radius: 5px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tlab-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.tlab-btn.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.tlab-btn-ghost {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  color: var(--ink-faint);
+}
+
+.tlab-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+
+.tlab-palette {
+  padding: 16px 18px;
+  border-right: 1px solid var(--rule);
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.tlab-group-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+  margin-bottom: 6px;
+}
+
+.tlab-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tlab-chip {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  padding: 5px 9px;
+  border-radius: 5px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: grab;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.tlab-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.tlab-chip.is-used {
+  background: var(--paper-sunk);
+  border-style: dashed;
+  color: var(--ink-faint);
+}
+
+.tlab-chip.is-dragging {
+  opacity: 0.4;
+}
+
+.tlab-packet {
+  padding: 16px 18px;
+}
+
+.tlab-packet-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.tlab-packet-head strong {
+  font-family: var(--display);
+  font-size: 1rem;
+}
+
+.tlab-slots {
+  display: grid;
+  gap: 8px;
+}
+
+.tlab-slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border: 1px dashed var(--rule);
+  border-radius: 6px;
+  background: var(--paper);
+  min-height: 46px;
+  transition: all 0.15s ease;
+}
+
+.tlab-slot.is-over {
+  border-color: var(--accent);
+  border-style: solid;
+  background: rgba(0, 119, 182, 0.05);
+}
+
+.tlab-slot.is-filled {
+  border-style: solid;
+  cursor: pointer;
+}
+
+.tlab-slot.is-conflict {
+  border-color: #d32f2f;
+  background: rgba(211, 47, 47, 0.06);
+}
+
+.tlab-slot-key {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink-faint);
+  width: 34%;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.tlab-slot-value {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.tlab-slot-value.is-empty {
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.tlab-slot-state {
+  margin-left: auto;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.tlab-readout {
+  border-top: 1px solid var(--rule);
+  background: var(--paper);
+}
+
+.tlab-hashes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.tlab-hash {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.tlab-hash-label {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+}
+
+.tlab-hash code {
+  font-size: 0.75rem;
+  word-break: break-all;
+}
+
+.tlab-verdict {
+  padding: 14px 18px;
+  border-left: 3px solid var(--rule);
+}
+
+.tlab-verdict.v-good { border-left-color: #2e7d32; }
+.tlab-verdict.v-warn { border-left-color: #d97706; }
+.tlab-verdict.v-bad  { border-left-color: #d32f2f; }
+
+.tlab-verdict-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tlab-verdict-head strong {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.tlab-verdict-tag {
+  font-family: var(--mono);
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--paper-sunk);
+  border: 1px solid var(--rule);
+  color: var(--ink-faint);
+  flex-shrink: 0;
+}
+
+.v-good .tlab-verdict-tag { background: rgba(46, 125, 50, 0.12); color: #2e7d32; border-color: rgba(46, 125, 50, 0.25); }
+.v-warn .tlab-verdict-tag { background: rgba(237, 108, 2, 0.12); color: #d97706; border-color: rgba(237, 108, 2, 0.25); }
+.v-bad  .tlab-verdict-tag { background: rgba(211, 47, 47, 0.12); color: #d32f2f; border-color: rgba(211, 47, 47, 0.25); }
+
+.tlab-rules {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+}
+
+.tlab-rules li {
+  display: flex;
+  gap: 8px;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.tlab-rules li strong { color: var(--ink); }
+
+.tlab-rule-icon {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+}
+
+@media (max-width: 760px) {
+  .tlab-board { grid-template-columns: 1fr; }
+  .tlab-palette { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .tlab-slot-key { width: 42%; }
+}
+</style>
+
+<script>
+(function () {
+  const ALL = ["chromium", "firefox", "tool"];
+
+  const FAMILY = {
+    chromium: "Chromium (Chrome / Brave / Edge)",
+    firefox: "Firefox (NSS)",
+    tool: "Automation tool (OpenSSL-class)"
+  };
+
+  const CATEGORIES = [
+    { key: "version", label: "Max TLS Version", hint: "supported_versions extension" },
+    { key: "ciphers", label: "Cipher Suite List", hint: "order and count are both hashed" },
+    { key: "grease", label: "GREASE Entries", hint: "RFC 8701 dummy values" },
+    { key: "alpn", label: "ALPN Protocols", hint: "advertised L7 protocols" },
+    { key: "extorder", label: "Extension Order", hint: "sequence of extension IDs" },
+    { key: "engine", label: "TLS Library", hint: "never on the wire, but it writes the bytes" },
+    { key: "ua", label: "Claimed User-Agent", hint: "Layer 7, arrives after the handshake" }
+  ];
+
+  const PARTS = {
+    version: [
+      { id: "tls13", label: "TLS 1.3 offered", families: ALL, ja4: "13", tell: "Offering TLS 1.3 is normal for every client shipped after 2018." },
+      { id: "tls12", label: "TLS 1.2 maximum", families: ["tool"], ja4: "12", tell: "A browser from the last seven years always offers TLS 1.3; capping at 1.2 only happens in old libraries and middleboxes." }
+    ],
+    ciphers: [
+      { id: "chromium", label: "Chromium order (16)", families: ["chromium"], count: 16, tell: "Chromium's fixed 16-suite order, GREASE slot first." },
+      { id: "nss", label: "Firefox/NSS order (17)", families: ["firefox"], count: 17, tell: "NSS orders ChaCha20 ahead of AES on devices without AES-NI." },
+      { id: "openssl", label: "OpenSSL default (47)", families: ["tool"], count: 47, tell: "47 suites in OpenSSL's default order: no browser has ever shipped that list." },
+      { id: "minimal", label: "Minimal CLI set (9)", families: ["tool"], count: 9, tell: "A trimmed build-time cipher list, typical of CLI tools." }
+    ],
+    grease: [
+      { id: "on", label: "GREASE injected", families: ["chromium"], tell: "Random 0x?a?a values in ciphers, groups and extensions: a Chromium signature since 2016." },
+      { id: "off", label: "No GREASE", families: ["firefox", "tool"], tell: "No GREASE values, which is correct for NSS and for every default HTTP library." }
+    ],
+    alpn: [
+      { id: "h2", label: "h2, http/1.1", families: ["chromium", "firefox"], ja4: "h2", tell: "Negotiating HTTP/2 up front, as both browser engines do." },
+      { id: "h1", label: "http/1.1 only", families: ["tool"], ja4: "h1", tell: "HTTP/1.1 alone: urllib3 and unflagged curl never ask for h2." },
+      { id: "none", label: "No ALPN extension", families: ["tool"], ja4: "00", tell: "A missing ALPN extension is impossible for a modern browser." }
+    ],
+    extorder: [
+      { id: "chromium", label: "Chromium sequence (16)", families: ["chromium"], count: 16, tell: "Chromium shuffles its extension order per connection but keeps a known set." },
+      { id: "nss", label: "Firefox/NSS sequence (14)", families: ["firefox"], count: 14, tell: "NSS puts server_name first and keeps a stable sequence." },
+      { id: "minimal", label: "Minimal set (7)", families: ["tool"], count: 7, tell: "Seven extensions: the bare minimum a library needs to connect." }
+    ],
+    engine: [
+      { id: "boringssl", label: "BoringSSL", families: ["chromium"], tell: "BoringSSL emits Chromium's bytes natively." },
+      { id: "nss", label: "NSS", families: ["firefox"], tell: "NSS emits Firefox's bytes natively." },
+      { id: "openssl", label: "OpenSSL", families: ["tool"], tell: "Stock OpenSSL, as used by Python requests and curl." },
+      { id: "libressl", label: "LibreSSL", families: ["tool"], tell: "LibreSSL, as shipped with macOS curl." }
+    ],
+    ua: [
+      { id: "chrome", label: "Chrome 122", families: ["chromium"], tell: "Header claims Chrome 122 on macOS." },
+      { id: "firefox", label: "Firefox 124", families: ["firefox"], tell: "Header claims Firefox 124." },
+      { id: "python", label: "python-requests/2.31", families: ["tool"], tell: "Header admits it is python-requests." },
+      { id: "curl", label: "curl/8.4.0", families: ["tool"], tell: "Header admits it is curl." }
+    ]
+  };
+
+  const WIRE = ["version", "ciphers", "grease", "alpn", "extorder"];
+
+  const PRESETS = [
+    { id: "python", label: "Python requests", sel: { version: "tls13", ciphers: "openssl", grease: "off", alpn: "h1", extorder: "minimal", engine: "openssl", ua: "python" } },
+    { id: "spoof", label: "requests + fake Chrome UA", sel: { version: "tls13", ciphers: "openssl", grease: "off", alpn: "h1", extorder: "minimal", engine: "openssl", ua: "chrome" } },
+    { id: "curl", label: "curl", sel: { version: "tls13", ciphers: "minimal", grease: "off", alpn: "none", extorder: "minimal", engine: "libressl", ua: "curl" } },
+    { id: "chrome", label: "Real Chrome", sel: { version: "tls13", ciphers: "chromium", grease: "on", alpn: "h2", extorder: "chromium", engine: "boringssl", ua: "chrome" } },
+    { id: "firefox", label: "Real Firefox", sel: { version: "tls13", ciphers: "nss", grease: "off", alpn: "h2", extorder: "nss", engine: "nss", ua: "firefox" } },
+    { id: "cffi", label: "curl_cffi / uTLS", sel: { version: "tls13", ciphers: "chromium", grease: "on", alpn: "h2", extorder: "chromium", engine: "openssl", ua: "chrome" } },
+    { id: "legacy", label: "Legacy 1.2-only client", sel: { version: "tls12", ciphers: "openssl", grease: "off", alpn: "h1", extorder: "minimal", engine: "openssl", ua: "chrome" } }
+  ];
+
+  const part = (cat, id) => PARTS[cat].find(p => p.id === id);
+  const intersect = (a, b) => a.filter(x => b.indexOf(x) > -1);
+  const isComplete = sel => CATEGORIES.every(c => sel[c.key]);
+  const pad2 = n => String(n).padStart(2, "0");
+
+  function wireFamily(sel) {
+    const left = WIRE.reduce((acc, k) => intersect(acc, part(k, sel[k]).families), ALL.slice());
+    return left.length === 1 ? left[0] : "unknown";
+  }
+
+  function conflicts(sel) {
+    const anchor = part("ciphers", sel.ciphers).families[0];
+    return WIRE.filter(k => k !== "ciphers" && part(k, sel[k]).families.indexOf(anchor) === -1);
+  }
+
+  function ja4Prefix(sel) {
+    const v = part("version", sel.version).ja4;
+    const cc = pad2(part("ciphers", sel.ciphers).count);
+    const ec = pad2(part("extorder", sel.extorder).count);
+    return "t" + v + "d" + cc + ec + part("alpn", sel.alpn).ja4;
+  }
+
+  function fnv(str) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h >>> 0;
+  }
+
+  function ja3Hash(sel) {
+    const canonical = WIRE.map(k => sel[k]).join(",");
+    return [0, 1, 2, 3].map(i => fnv(i + "|" + canonical).toString(16).padStart(8, "0")).join("");
+  }
+
+  function evaluate(sel) {
+    const fp = wireFamily(sel);
+    const uaFam = part("ua", sel.ua).families[0];
+    const engineFam = part("engine", sel.engine).families[0];
+    const patched = fp !== "unknown" && engineFam !== fp;
+    const rules = [];
+
+    if (fp === "unknown") {
+      const anchor = part("ciphers", sel.ciphers).families[0];
+      rules.push({ icon: "✕", text: "Your <strong>cipher list</strong> belongs to " + FAMILY[anchor] + ", but these fields contradict it: <strong>" + conflicts(sel).map(k => CATEGORIES.find(c => c.key === k).label).join(", ") + "</strong>." });
+      conflicts(sel).forEach(k => rules.push({ icon: "·", text: part(k, sel[k]).tell }));
+      rules.push({ icon: "!", text: "A hash that matches no shipping client is worse than a known bot hash: anomaly scoring treats an unseen JA3 as a hand-rolled stack and challenges it." });
+      return { level: "bad", tag: "Blocked", title: "Unknown client — fingerprint matches nothing in the database", rules: rules };
+    }
+
+    if (uaFam === fp && fp === "tool") {
+      rules.push({ icon: "✓", text: "Handshake and header agree: both say " + FAMILY.tool + "." });
+      rules.push({ icon: "·", text: part("ciphers", sel.ciphers).tell });
+      rules.push({ icon: "·", text: "Nothing here is a lie, so impersonation scoring never fires. You are classified as a declared bot." });
+      rules.push({ icon: "!", text: "Expect rate limits, robots.txt enforcement or a Turnstile interstitial rather than a hard 403. Plenty of sites allow this traffic; scrapers are blocked for lying, not for being scripts." });
+      return { level: "warn", tag: "Identified", title: "Classified as an automated tool — honest, not spoofed", rules: rules };
+    }
+
+    if (uaFam === fp) {
+      rules.push({ icon: "✓", text: "All five wire fields point to one client: <strong>" + FAMILY[fp] + "</strong>, and the User-Agent claims the same thing." });
+      rules.push({ icon: "·", text: part("grease", sel.grease).tell });
+      rules.push({ icon: "·", text: part("alpn", sel.alpn).tell });
+      if (patched) {
+        rules.push({ icon: "★", text: "You selected <strong>" + part("engine", sel.engine).label + "</strong>, which does not produce these bytes by default — so this is a patched or re-implemented stack (curl_cffi, uTLS, tls-client). It still passes: the server hashes the bytes, never the library that wrote them." });
+        rules.push({ icon: "!", text: "The next layer catches it instead. Akamai hashes the HTTP/2 SETTINGS frame, window size and header order; Cloudflare adds TCP/IP signals. Impersonating TLS alone leaves those untouched." });
+        return { level: "good", tag: "Passes TLS", title: "Accepted as " + FAMILY[fp] + " — impersonation done correctly", rules: rules };
+      }
+      rules.push({ icon: "·", text: part("engine", sel.engine).label + " produces exactly these bytes, so there is nothing to reconcile." });
+      return { level: "good", tag: "Allowed", title: "Accepted as a genuine " + FAMILY[fp] + " session", rules: rules };
+    }
+
+    if (fp === "tool") {
+      rules.push({ icon: "✕", text: "The handshake fingerprints as <strong>" + FAMILY.tool + "</strong> while the header claims <strong>" + part("ua", sel.ua).label + "</strong>." });
+      rules.push({ icon: "·", text: part("ciphers", sel.ciphers).tell });
+      rules.push({ icon: "·", text: part("grease", sel.grease).tell });
+      if (sel.version === "tls12") rules.push({ icon: "·", text: part("version", "tls12").tell });
+      rules.push({ icon: "!", text: "The ClientHello arrives first and the header second, so the contradiction is already recorded before your User-Agent is parsed. Rewriting headers cannot fix a decision made one layer down." });
+      return { level: "bad", tag: "Blocked", title: "Impersonation detected — 403 before your headers were read", rules: rules };
+    }
+
+    rules.push({ icon: "✓", text: "Your handshake is a clean <strong>" + FAMILY[fp] + "</strong> fingerprint: nothing on the wire gives you away." });
+    rules.push({ icon: "✕", text: "Then the header says <strong>" + part("ua", sel.ua).label + "</strong> and withdraws the whole disguise." });
+    rules.push({ icon: "!", text: "A browser fingerprint paired with a tool User-Agent is a plain self-declaration. The cheapest rule in any WAF is a User-Agent deny list, and it fires here." });
+    return { level: "bad", tag: "Blocked", title: "Perfect handshake, confessing header", rules: rules };
+  }
+
+  const root = document.getElementById("tlsLab");
+  if (!root) return;
+
+  const paletteEl = document.getElementById("tlabPalette");
+  const slotsEl = document.getElementById("tlabSlots");
+  const presetsEl = document.getElementById("tlabPresets");
+  const ja4El = document.getElementById("tlabJa4");
+  const ja3El = document.getElementById("tlabJa3");
+  const verdictEl = document.getElementById("tlabVerdict");
+  const tagEl = document.getElementById("tlabVerdictTag");
+  const titleEl = document.getElementById("tlabVerdictTitle");
+  const rulesEl = document.getElementById("tlabRules");
+
+  let selection = {};
+  let activePreset = null;
+
+  function buildPalette() {
+    paletteEl.innerHTML = CATEGORIES.map(cat =>
+      '<div class="tlab-group">' +
+        '<span class="tlab-group-label">' + cat.label + '</span>' +
+        '<div class="tlab-chips">' +
+          PARTS[cat.key].map(p =>
+            '<button class="tlab-chip" type="button" draggable="true" data-cat="' + cat.key + '" data-id="' + p.id + '" title="' + p.tell.replace(/"/g, "&quot;") + '">' + p.label + "</button>"
+          ).join("") +
+        "</div>" +
+      "</div>"
+    ).join("");
+  }
+
+  function buildPresets() {
+    presetsEl.innerHTML = PRESETS.map(p =>
+      '<button class="tlab-btn" type="button" data-preset="' + p.id + '">' + p.label + "</button>"
+    ).join("");
+  }
+
+  function buildSlots() {
+    slotsEl.innerHTML = CATEGORIES.map(cat =>
+      '<div class="tlab-slot" data-cat="' + cat.key + '">' +
+        '<span class="tlab-slot-key">' + cat.label + "<br><em>" + cat.hint + "</em></span>" +
+        '<span class="tlab-slot-value is-empty">drop here</span>' +
+        '<span class="tlab-slot-state"></span>' +
+      "</div>"
+    ).join("");
+  }
+
+  function place(cat, id) {
+    if (!PARTS[cat] || !part(cat, id)) return;
+    selection[cat] = id;
+    activePreset = null;
+    render();
+  }
+
+  function clear(cat) {
+    delete selection[cat];
+    activePreset = null;
+    render();
+  }
+
+  function render() {
+    const complete = isComplete(selection);
+    const bad = complete ? conflicts(selection) : [];
+    const unknown = complete && wireFamily(selection) === "unknown";
+
+    slotsEl.querySelectorAll(".tlab-slot").forEach(slot => {
+      const cat = slot.getAttribute("data-cat");
+      const id = selection[cat];
+      const valueEl = slot.querySelector(".tlab-slot-value");
+      const stateEl = slot.querySelector(".tlab-slot-state");
+      const conflicted = unknown && bad.indexOf(cat) > -1;
+
+      slot.classList.toggle("is-filled", Boolean(id));
+      slot.classList.toggle("is-conflict", conflicted);
+      valueEl.classList.toggle("is-empty", !id);
+      valueEl.textContent = id ? part(cat, id).label : "drop here";
+      stateEl.textContent = !id ? "" : conflicted ? "⚠" : "✓";
+    });
+
+    paletteEl.querySelectorAll(".tlab-chip").forEach(chip => {
+      chip.classList.toggle("is-used", selection[chip.getAttribute("data-cat")] === chip.getAttribute("data-id"));
+    });
+
+    presetsEl.querySelectorAll(".tlab-btn").forEach(btn => {
+      btn.classList.toggle("is-active", btn.getAttribute("data-preset") === activePreset);
+    });
+
+    if (!complete) {
+      const left = CATEGORIES.filter(c => !selection[c.key]).length;
+      ja4El.textContent = "—";
+      ja3El.textContent = "—";
+      verdictEl.className = "tlab-verdict";
+      tagEl.textContent = "Awaiting input";
+      titleEl.textContent = left + (left === 1 ? " slot left" : " slots left") + " before the detection engine runs";
+      rulesEl.innerHTML = "";
+      return;
+    }
+
+    ja4El.textContent = ja4Prefix(selection);
+    ja3El.textContent = ja3Hash(selection);
+
+    const result = evaluate(selection);
+    verdictEl.className = "tlab-verdict v-" + result.level;
+    tagEl.textContent = result.tag;
+    titleEl.textContent = result.title;
+    rulesEl.innerHTML = result.rules.map(r =>
+      '<li><span class="tlab-rule-icon">' + r.icon + "</span><span>" + r.text + "</span></li>"
+    ).join("");
+  }
+
+  paletteEl.addEventListener("click", e => {
+    const chip = e.target.closest(".tlab-chip");
+    if (chip) place(chip.getAttribute("data-cat"), chip.getAttribute("data-id"));
+  });
+
+  paletteEl.addEventListener("dragstart", e => {
+    const chip = e.target.closest(".tlab-chip");
+    if (!chip) return;
+    chip.classList.add("is-dragging");
+    e.dataTransfer.setData("text/plain", chip.getAttribute("data-cat") + ":" + chip.getAttribute("data-id"));
+    e.dataTransfer.effectAllowed = "copy";
+  });
+
+  paletteEl.addEventListener("dragend", e => {
+    const chip = e.target.closest(".tlab-chip");
+    if (chip) chip.classList.remove("is-dragging");
+  });
+
+  slotsEl.addEventListener("dragover", e => {
+    const slot = e.target.closest(".tlab-slot");
+    if (!slot) return;
+    e.preventDefault();
+    slot.classList.add("is-over");
+  });
+
+  slotsEl.addEventListener("dragleave", e => {
+    const slot = e.target.closest(".tlab-slot");
+    if (slot) slot.classList.remove("is-over");
+  });
+
+  slotsEl.addEventListener("drop", e => {
+    const slot = e.target.closest(".tlab-slot");
+    if (!slot) return;
+    e.preventDefault();
+    slot.classList.remove("is-over");
+    const payload = (e.dataTransfer.getData("text/plain") || "").split(":");
+    if (payload[0] === slot.getAttribute("data-cat")) place(payload[0], payload[1]);
+  });
+
+  slotsEl.addEventListener("click", e => {
+    const slot = e.target.closest(".tlab-slot.is-filled");
+    if (slot) clear(slot.getAttribute("data-cat"));
+  });
+
+  presetsEl.addEventListener("click", e => {
+    const btn = e.target.closest("[data-preset]");
+    if (!btn) return;
+    const preset = PRESETS.find(p => p.id === btn.getAttribute("data-preset"));
+    selection = Object.assign({}, preset.sel);
+    activePreset = preset.id;
+    render();
+  });
+
+  document.getElementById("tlabReset").addEventListener("click", () => {
+    selection = {};
+    activePreset = null;
+    render();
+  });
+
+  buildPalette();
+  buildPresets();
+  buildSlots();
+  render();
+})();
+</script>

@@ -1,0 +1,25 @@
+{% assign picks = site.data.picks %}
+{% if picks.size > 0 %}
+<div class="picks">
+  <span class="picks-kicker">Editorial picks</span>
+  <div class="picks-grid">
+    {% for pick in picks %}
+      {% assign post = site.posts | where: "slug", pick.slug | first %}
+      {% if post %}
+      {% assign thumb = pick.thumb | default: post.header.teaser | default: post.header.image %}
+      <a class="pick" href="{{ post.url | relative_url }}">
+        {% if thumb %}
+          {% if thumb contains '://' %}{% assign thumb_src = thumb %}{% else %}{% assign thumb_src = thumb | prepend: '/' | replace: '//', '/' | relative_url %}{% endif %}
+        <span class="pick-thumb">
+          <img src="{{ thumb_src }}" alt="{{ post.title | escape }}" loading="lazy" decoding="async">
+        </span>
+        {% endif %}
+        <span class="pick-meta">{{ post.date | date: '%b %-d, %Y' }} &middot; {% include read-time.html %}</span>
+        <h3>{{ post.title }}</h3>
+        <p>{{ pick.note | default: post.excerpt | strip_html | truncate: 150 }}</p>
+      </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}

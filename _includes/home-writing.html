@@ -4,6 +4,8 @@
     <span class="kicker">latest {{ site.posts | size | at_most: 6 }}</span>
   </div>
 
+  {% include editorial-picks.html %}
+
   <ul class="posts">
     {% for post in site.posts limit: 6 %}
     <li>

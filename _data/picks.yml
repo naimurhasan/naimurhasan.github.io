@@ -1,0 +1,6 @@
+- slug: tls-1-2-vs-tls-1-3
+  note: "Why TLS 1.3 halved the handshake, plus a drag-and-drop lab that shows how Cloudflare spots a spoofed Chrome."
+
+- slug: google-ai-passes-google-anti-ai-test
+  thumb: "assets/images/blog/2026-11-23-clickcaptcha-result.png"
+  note: "I pointed Google's own vision model at Google's anti-bot challenge and measured how much of it solves itself."

@@ -1,0 +1,24 @@
+<section class="section col" id="contact">
+  <div class="section-head">
+    <h2>Contact</h2>
+    <span class="kicker">open to paid work</span>
+  </div>
+
+  <div class="prose">
+    <p>Scraping, automation, data pipelines or an app that needs all three — tell me what you are trying to collect and what you want to do with it.</p>
+  </div>
+
+  <dl class="contact-grid">
+    <div>
+      <dt>{% include icon.html name="mail" %}Email</dt>
+      <dd><a href="mailto:{{ site.author.email }}?subject=Project%20enquiry">{{ site.author.email }}</a></dd>
+      <dd><button class="copy-mail" type="button" data-copy-email="{{ site.author.email }}">Copy address</button></dd>
+    </div>
+    <div>
+      <dt>{% include icon.html name="pin" %}Elsewhere</dt>
+      <dd><a href="https://github.com/{{ site.author.github }}">{% include icon.html name="github" %}github.com/{{ site.author.github }}</a></dd>
+      <dd><a href="https://www.linkedin.com/in/{{ site.author.linkedin }}">{% include icon.html name="linkedin" %}linkedin.com/in/{{ site.author.linkedin }}</a></dd>
+      <dd><a href="https://twitter.com/{{ site.author.twitter }}">{% include icon.html name="twitter" %}twitter.com/{{ site.author.twitter }}</a></dd>
+    </div>
+  </dl>
+</section>

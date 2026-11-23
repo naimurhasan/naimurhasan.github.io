@@ -1,8 +1,60 @@
 ---
 layout: default
 ---
-{% include post-header.html %}
-{% include post-intro.html %}
-{% include post-content.html %}
-{% include post-related.html %}
-{% include common-contact.html %}
+<article class="article col">
+
+  <p class="meta">
+    <span>{% include icon.html name="calendar" %}<time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%B %-d, %Y' }}</time></span>
+    {% if page.read_time %}<span>{% include icon.html name="clock" %}{% include read-time.html %}</span>{% endif %}
+    {% if page.categories[0] %}<span>{% include icon.html name="tag" %}{{ page.categories | join: ', ' }}</span>{% endif %}
+  </p>
+
+  <h1>{{ page.title }}</h1>
+
+  {% if page.tags.size > 0 %}
+  <div class="article-tags">
+    {% for tag in page.tags %}
+      <a class="tag" href="{{ '/tags/#' | append: tag | slugify | relative_url }}">{{ tag }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="content">
+    {{ content }}
+  </div>
+
+  <div class="article-foot">
+    <div class="prevnext">
+      {% if page.previous %}
+      <a href="{{ page.previous.url | relative_url }}">
+        <span class="dir">Previous</span>
+        <span class="t">{{ page.previous.title }}</span>
+      </a>
+      {% endif %}
+      {% if page.next %}
+      <a href="{{ page.next.url | relative_url }}">
+        <span class="dir">Next</span>
+        <span class="t">{{ page.next.title }}</span>
+      </a>
+      {% endif %}
+    </div>
+
+    <div class="list-foot" style="margin-top: 28px">
+      <a class="more-link" href="{{ '/blog/' | relative_url }}">&larr; All writing</a>
+      <a class="feed-link" href="{{ '/feed.xml' | relative_url }}">RSS</a>
+    </div>
+
+    {% if page.comments and site.comments.provider == 'disqus' and site.comments.disqus.shortname %}
+    <div class="comments-wrap">
+      <h2>Comments</h2>
+      <p class="comments-note">Comments are hosted by Disqus, which sets its own cookies. Nothing loads until you ask for it.</p>
+      <button class="load-comments" id="loadComments" type="button"
+              data-disqus="{{ site.comments.disqus.shortname }}"
+              data-identifier="{{ page.id }}"
+              data-url="{{ page.url | absolute_url }}">Load comments</button>
+      <div id="disqus_thread"></div>
+    </div>
+    {% endif %}
+  </div>
+
+</article>

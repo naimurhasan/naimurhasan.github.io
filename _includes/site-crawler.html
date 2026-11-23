@@ -1,0 +1,45 @@
+<div class="rail" id="rail" data-email="{{ site.author.email }}" aria-hidden="false">
+  <div class="line"></div>
+  <div class="trail" id="crawlTrail"></div>
+  <div class="strand" id="crawlStrand"></div>
+  <div class="spill" id="crawlSpill"></div>
+  <div class="hearts" id="crawlHearts"></div>
+
+  <button class="hit" id="crawlHit" type="button" aria-label="Pet the crawler" aria-expanded="false">
+    <span class="halo"></span>
+    <span class="rope" id="crawlRope">
+      <span class="drop">
+        <span class="panic" id="crawlPanic">
+          <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false">
+            <g>
+              <path class="leg" d="M8 8 L3 4 L0.5 6"/>
+              <path class="leg" d="M8 9 L2.5 8 L0 10"/>
+              <path class="leg" d="M8 10 L3 12 L1 15"/>
+              <path class="leg" d="M9 11 L7 15 L5.5 17.5"/>
+              <path class="leg" d="M10 8 L15 4 L17.5 6"/>
+              <path class="leg" d="M10 9 L15.5 8 L18 10"/>
+              <path class="leg" d="M10 10 L15 12 L17 15"/>
+              <path class="leg" d="M9.5 11 L11.5 15 L13 17.5"/>
+            </g>
+            <ellipse class="body" cx="9" cy="8" rx="2.1" ry="1.6"/>
+            <ellipse class="body" cx="9" cy="10.6" rx="2.9" ry="2.6"/>
+          </svg>
+        </span>
+      </span>
+    </span>
+  </button>
+
+  <span class="says" id="crawlSays"></span>
+  <span class="pct" id="crawlPct">0%</span>
+
+  <div class="panel" id="crawlPanel" role="dialog" aria-label="The crawler">
+    <button class="closex" id="crawlClose" type="button" aria-label="Close">&times;</button>
+    <h3 id="crawlPanelTitle">thank you</h3>
+    <p class="msg" id="crawlPanelMsg">First pet of my career. Two things I can do for you:</p>
+    <div class="acts" id="crawlActs">
+      <button id="crawlCopy" type="button">Copy his email</button>
+      <button id="crawlCoffee" type="button">Gift a coffee &#9749;</button>
+    </div>
+    <p class="pets" id="crawlPets"></p>
+  </div>
+</div>

@@ -1,43 +1,40 @@
 ---
-layout: archive
+layout: default
 ---
+{% assign all_tags = '' | split: '' %}
+{% for post in site.posts %}{% assign all_tags = all_tags | concat: post.tags %}{% endfor %}
+{% assign all_tags = all_tags | uniq | sort %}
 
-{{ content }}
+<div class="col" style="padding-block: 44px 0">
+  <h1 class="page-title">{{ page.title }}</h1>
+  <p class="standfirst">Every tag in use, with the posts under it.</p>
 
-{% assign tags_max = 0 %}
-{% for tag in site.tags %}
-  {% if tag[1].size > tags_max %}
-    {% assign tags_max = tag[1].size %}
-  {% endif %}
-{% endfor %}
-
-<ul class="taxonomy__index">
-  {% for i in (1..tags_max) reversed %}
-    {% for tag in site.tags %}
-      {% if tag[1].size == i %}
-        <li>
-          <a href="#{{ tag[0] | slugify }}">
-            <strong><p class="fa fa-tags"></p> {{ tag[0] }}</strong> <span class="taxonomy__count">{{ i }}</span>
-          </a>
-        </li>
-      {% endif %}
+  <div class="pills" style="margin-bottom: 8px">
+    {% for tag in all_tags %}
+      {% assign n = 0 %}
+      {% for post in site.posts %}{% if post.tags contains tag %}{% assign n = n | plus: 1 %}{% endif %}{% endfor %}
+      <a class="pill" href="#{{ tag | slugify }}" style="text-decoration:none">{{ tag }}<span class="n">{{ n }}</span></a>
     {% endfor %}
-  {% endfor %}
-</ul>
+  </div>
 
-{% for i in (1..tags_max) reversed %}
-  {% for tag in site.tags %}
-    {% if tag[1].size == i %}
-      <section id="{{ tag[0] | slugify | downcase }}" class="taxonomy__section">
-        <h2 class="archive__subtitle"><p class="fa fa-tags"></p> {{ tag[0] }}</h2>
-        <div class="entries-{{ page.entries_layout | default: 'list' }}">
-          {% for post in tag.last %}
-            {% include archive-single.html type=page.entries_layout %}
-          {% endfor %}
-        </div>
-        <a href="#page-title" class="back-to-top">{{ site.data.ui-text[site.locale].back_to_top | default: 'Back to Top' }} &uarr;</a>
-      </section>
-    {% endif %}
+  {% for tag in all_tags %}
+  <section class="year-group" id="{{ tag | slugify }}">
+    <h2>{{ tag }}</h2>
+    <ul class="posts">
+      {% for post in site.posts %}{% if post.tags contains tag %}
+      <li>
+        <a class="post-row" href="{{ post.url | relative_url }}">
+          <span class="date">{{ post.date | date: '%b %-d, %Y' }}</span>
+          <span class="title">{{ post.title }}</span>
+          <span class="time">{% include read-time.html %}</span>
+        </a>
+      </li>
+      {% endif %}{% endfor %}
+    </ul>
+  </section>
   {% endfor %}
-{% endfor %}
 
+  <div class="list-foot" style="margin-top: 48px">
+    <a class="more-link" href="{{ '/blog/' | relative_url }}">&larr; All writing</a>
+  </div>
+</div>

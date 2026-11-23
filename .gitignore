@@ -8,3 +8,14 @@ _site
 Gemfile.lock
 jekyll*.sh
 
+hero-options.preview.html
+hero-photo.preview.html
+hero-arch.preview.html
+hero-signature.preview.html
+crawler.preview.html
+writing.preview.html
+blog.preview.html
+vendor/
+.bundle/
+_site/
+logo.preview.html

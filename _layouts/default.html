@@ -1,21 +1,24 @@
 ---
 ---
 <!doctype html>
-<!--
-  Piotr Kowalski Personal Page with Blog Jekyll Theme
-  Copyright (c) 2017-2018 Piotr Kowalski - piotrkowalski.info | @PK0walski
-  https://github.com/bitroniq/bitroniq.github.io
--->
-<html lang="en">
+<html lang="{{ site.locale | default: 'en-US' | slice: 0, 2 }}">
 
 {% include default-head.html %}
 
 <body>
 
-{{ content }}
+<a class="skip" href="#main">Skip to content</a>
 
-{% include default-scripts.html%}
+{% include site-crawler.html %}
+{% include site-nav.html %}
+
+<main id="main">
+{{ content }}
+</main>
+
+{% include site-footer.html %}
+
+{% include default-scripts.html %}
 
 </body>
-
 </html>

@@ -1,0 +1,62 @@
+{% assign projects = site.projects | sort: 'year' | reverse %}
+{% assign all_tags = '' | split: '' %}
+{% for p in projects %}{% assign all_tags = all_tags | concat: p.tags %}{% endfor %}
+{% assign all_tags = all_tags | uniq | sort %}
+
+<section class="section col" id="work" data-cap="6">
+  <div class="section-head">
+    <h2>Work</h2>
+    <span class="kicker">{{ projects | size }} projects</span>
+  </div>
+
+  <div class="pills" id="workPills" role="group" aria-label="Filter projects by tag">
+    <button class="pill" type="button" data-tag="all" aria-pressed="true">all<span class="n">{{ projects | size }}</span></button>
+    {% for tag in all_tags %}
+      {% assign n = 0 %}
+      {% for p in projects %}{% if p.tags contains tag %}{% assign n = n | plus: 1 %}{% endif %}{% endfor %}
+      <button class="pill" type="button" data-tag="{{ tag }}" aria-pressed="false">{{ tag }}<span class="n">{{ n }}</span></button>
+    {% endfor %}
+  </div>
+
+  <ul class="work-list" id="workList">
+    {% for p in projects %}
+    <li data-tags="{{ p.tags | join: ' ' }}">
+      <div class="work-row">
+
+        {% if p.image %}
+        <a class="shot" {% if p.link %}href="{{ p.link }}"{% endif %} tabindex="-1" aria-hidden="true">
+          <img src="{{ p.image | relative_url }}" alt="" width="320" height="240" loading="lazy" decoding="async">
+        </a>
+        {% endif %}
+
+        <div class="work-body">
+          <div class="work-top">
+            <h3>{% if p.link %}<a href="{{ p.link }}">{{ p.title }}</a>{% else %}{{ p.title }}{% endif %}</h3>
+            <span class="year">{{ p.year }}</span>
+          </div>
+
+          <p class="what">{{ p.what }}</p>
+
+          <div class="work-meta">
+            <span class="stack">
+              {% for tag in p.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+            </span>
+            {% if p.link %}
+            <a class="golink" href="{{ p.link }}">
+              {% include icon.html name=p.platform %}{{ p.link_label | default: 'Visit' }}
+            </a>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <p class="empty-state" id="workEmpty" hidden>Nothing tagged that yet.</p>
+
+  <div class="list-foot">
+    <button class="expand" id="workMore" type="button" hidden></button>
+  </div>
+</section>

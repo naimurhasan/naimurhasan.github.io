@@ -245,6 +245,8 @@ include:
 # These exclusions are relative to the site's source directory and cannot
 # be outside the source directory.
 exclude:
+  - "*.preview.html"
+  - vendor/bundle
   - "*.sublime-project"
   - "*.sublime-workspace"
   - vendor
@@ -294,14 +296,15 @@ sass:
 
 # Outputting
 permalink: "/blog/:categories/:title/"
-paginate: 8 # amount of posts to show
-paginate_path: "/blog/page:num/"
 # timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 timezone: "Asia/Dhaka"
 
 # Plugins (previously gems:)
+collections:
+  projects:
+    output: false
+
 plugins:
-  - jekyll-paginate
   - jekyll-sitemap
   - jekyll-gist
   - jekyll-feed
@@ -309,7 +312,6 @@ plugins:
 
 # mimic GitHub Pages with --safe
 whitelist:
-  - jekyll-paginate
   - jekyll-sitemap
   - jekyll-gist
   - jekyll-feed

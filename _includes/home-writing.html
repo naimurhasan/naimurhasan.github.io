@@ -1,0 +1,23 @@
+<section class="section col" id="writing">
+  <div class="section-head">
+    <h2>Writing</h2>
+    <span class="kicker">latest {{ site.posts | size | at_most: 6 }}</span>
+  </div>
+
+  <ul class="posts">
+    {% for post in site.posts limit: 6 %}
+    <li>
+      <a class="post-row" href="{{ post.url | relative_url }}">
+        <span class="date">{{ post.date | date: '%b %-d, %Y' }}</span>
+        <span class="title">{{ post.title }}</span>
+        <span class="time">{% include icon.html name="clock" %}{% include read-time.html %}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+
+  <div class="list-foot">
+    <a class="more-link" href="{{ '/blog/' | relative_url }}">All writing{% include icon.html name="arrow" %}</a>
+    <a class="feed-link" href="{{ '/feed.xml' | relative_url }}">{% include icon.html name="rss" %}RSS</a>
+  </div>
+</section>

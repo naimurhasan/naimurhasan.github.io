@@ -1,17 +1,30 @@
 ---
 layout: default
 ---
-{% include blog-header.html %}
-{% include blog-intro.html %}
-<!--=================================
-blog -->
-<section class="blog blog-page white-bg page-section" id="blog">
-  <div class="container-fluid">
+<div class="col" style="padding-block: 44px 0">
+  <h1 class="page-title">{{ page.title }}</h1>
+  {% if page.standfirst %}<p class="standfirst">{{ page.standfirst }}</p>{% endif %}
 
-    {{ content }}
-    
+  {% assign years = site.posts | group_by_exp: 'post', 'post.date | date: "%Y"' %}
+  {% for year in years %}
+  <section class="year-group">
+    <h2>{{ year.name }}</h2>
+    <ul class="posts">
+      {% for post in year.items %}
+      <li>
+        <a class="post-row" href="{{ post.url | relative_url }}">
+          <span class="date">{{ post.date | date: '%b %-d' }}</span>
+          <span class="title">{{ post.title }}</span>
+          <span class="time">{% include read-time.html %}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endfor %}
+
+  <div class="list-foot" style="margin-top: 48px">
+    <a class="more-link" href="{{ '/blog/' | relative_url }}">&larr; All writing</a>
   </div>
-</section>
-<!--=================================
-blog -->
-{% include common-contact.html %}
+  {{ content }}
+</div>

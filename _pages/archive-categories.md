@@ -1,6 +1,6 @@
 ---
-title: "Posts by Category"
-layout: categories
+title: "Categories"
 permalink: /categories/
-author_profile: true
+layout: archive
+standfirst: "Posts grouped by year. Tags are the main way in."
 ---

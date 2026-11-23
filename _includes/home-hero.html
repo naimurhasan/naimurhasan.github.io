@@ -1,0 +1,22 @@
+<section class="hero col" id="top">
+  <div class="inner">
+    <div>
+      <p class="tag">{{ site.author.location }} &middot; 7+ years</p>
+      <h1>I build systems that collect, clean and use data.</h1>
+      <p class="lede">Full stack engineer and web scraper. These days I mostly write here about scraping at scale, proxies and automation.</p>
+      <div class="herolinks">
+        <a href="{{ '/blog/' | relative_url }}">{% include icon.html name="tag" %}Writing</a>
+        <a href="#work">{% include icon.html name="globe" %}Work</a>
+        <a href="https://github.com/{{ site.author.github }}">{% include icon.html name="github" %}GitHub</a>
+        <a href="#contact">{% include icon.html name="mail" %}Contact</a>
+      </div>
+    </div>
+
+    <div class="portrait" id="heroStage">
+      <span class="slab" id="heroSlab"></span>
+      <div class="arch" id="heroArch">
+        <img src="{{ site.author.avatar }}" alt="{{ site.author.name }}" width="600" height="800" draggable="false" loading="eager">
+      </div>
+    </div>
+  </div>
+</section>

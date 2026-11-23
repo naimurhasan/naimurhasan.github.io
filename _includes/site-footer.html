@@ -1,0 +1,12 @@
+<footer class="sitefoot">
+  <div class="in">
+    <span>&copy; {{ site.time | date: '%Y' }} {{ site.author.name }} &middot; built with Jekyll, no cookies</span>
+    <nav aria-label="Footer">
+      <a href="{{ '/blog/' | relative_url }}">Writing</a>
+      <a href="{{ '/tags/' | relative_url }}">Tags</a>
+      <a href="{{ '/feed.xml' | relative_url }}">{% include icon.html name="rss" %}RSS</a>
+      <a href="https://github.com/{{ site.author.github }}">{% include icon.html name="github" %}GitHub</a>
+      <a href="https://www.linkedin.com/in/{{ site.author.linkedin }}">{% include icon.html name="linkedin" %}LinkedIn</a>
+    </nav>
+  </div>
+</footer>

@@ -1,17 +1,71 @@
 ---
 layout: default
 ---
-{% include blog-header.html %}
-{% include blog-intro.html %}
-<!--=================================
-blog -->
-<section class="blog blog-page white-bg page-section" id="blog">
-  <div class="container-fluid">
+{% assign all_tags = '' | split: '' %}
+{% for post in site.posts %}{% assign all_tags = all_tags | concat: post.tags %}{% endfor %}
+{% assign all_tags = all_tags | uniq | sort %}
 
-    {{ content }}
-    
+<div class="col" id="blogIndex" style="padding-block: 44px 0">
+
+  <h1 class="page-title">Writing</h1>
+  <p class="standfirst">{{ page.standfirst | default: "Notes on web scraping at scale, proxies, automation and the data pipelines behind them. Mostly things I wish someone had written down before I had to find out." }}</p>
+
+  <div class="controls">
+    <div class="searchrow">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true" focusable="false">
+        <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M10 10l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      <input id="blogQ" type="search" placeholder="Search posts, tags, anything&hellip;" aria-label="Search posts" autocomplete="off">
+      <button class="clearbtn" id="blogClear" type="button" hidden aria-label="Clear search">&times;</button>
+      <kbd>/</kbd>
+    </div>
+
+    <div class="pills" id="blogPills" role="group" aria-label="Filter posts by tag">
+      <button class="pill" type="button" data-tag="all" aria-pressed="true">all<span class="n">{{ site.posts | size }}</span></button>
+      {% for tag in all_tags %}
+        {% assign n = 0 %}
+        {% for post in site.posts %}{% if post.tags contains tag %}{% assign n = n | plus: 1 %}{% endif %}{% endfor %}
+        <button class="pill" type="button" data-tag="{{ tag | slugify }}" aria-pressed="false">{{ tag }}<span class="n">{{ n }}</span></button>
+      {% endfor %}
+    </div>
+
+    <p class="status" id="blogStatus"></p>
   </div>
-</section>
-<!--=================================
-blog -->
-{% include common-contact.html %}
+
+  {% assign years = site.posts | group_by_exp: 'post', 'post.date | date: "%Y"' %}
+  {% for year in years %}
+  <section class="year-group">
+    <h2>{{ year.name }}</h2>
+    <ul class="posts">
+      {% for post in year.items %}
+      <li data-tags="{% for t in post.tags %}{{ t | slugify }} {% endfor %}"
+          data-search="{{ post.title | append: ' ' | append: post.excerpt | append: ' ' | append: post.tags | join: ' ' | strip_html | downcase | strip | escape }}">
+        <a class="post-row" href="{{ post.url | relative_url }}">
+          <span class="date">{{ post.date | date: '%b %-d' }}</span>
+          <span class="title">{{ post.title }}</span>
+          <span class="time">{% include icon.html name="clock" %}{% include read-time.html %}</span>
+          {% if post.excerpt %}<span class="dek">{{ post.excerpt | strip_html | truncate: 150 }}</span>{% endif %}
+          <span class="tags">
+            {% for tag in post.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+          </span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endfor %}
+
+  <div class="empty-state" id="blogEmpty" hidden>
+    <p>No posts match <strong id="blogEmptyQ"></strong>.</p>
+    <p>Try a broader word, or clear the filters.</p>
+  </div>
+
+  {{ content }}
+
+  <div class="list-foot" style="margin-top: 48px">
+    <a class="more-link" href="{{ '/tags/' | relative_url }}">All tags &rarr;</a>
+    <a class="feed-link" href="{{ '/feed.xml' | relative_url }}">{% include icon.html name="rss" %}RSS</a>
+  </div>
+
+</div>

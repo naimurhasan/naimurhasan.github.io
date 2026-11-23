@@ -1,0 +1,116 @@
+{% comment %}
+Charts as HTML and CSS. No library, no JS, no SVG maths — bar lengths are
+percentage widths, so they reflow with the column and follow the theme tokens.
+
+  type="bars"     one value per label
+  type="grouped"  two or more series per label
+  type="split"    one 100% stacked bar
+
+See the parameter list in the authoring brief.
+{% endcomment %}
+
+{% assign labels = include.labels | split: "|" %}
+{% assign unit = include.unit | default: "" %}
+{% assign suffix = include.suffix | default: "" %}
+
+{% if include.type == "grouped" %}
+  {% assign series = include.series | split: "|" %}
+  {% assign groups = include.values | split: "|" %}
+
+  {% assign max = 0 %}
+  {% for g in groups %}
+    {% assign nums = g | split: "," %}
+    {% for n in nums %}
+      {% assign f = n | plus: 0.0 %}
+      {% if f > max %}{% assign max = f %}{% endif %}
+    {% endfor %}
+  {% endfor %}
+  {% if include.scale %}{% assign max = include.scale | plus: 0.0 %}{% endif %}
+
+  <figure class="chart" role="group">
+    {% if include.title %}<figcaption class="chart-title">{{ include.title }}</figcaption>{% endif %}
+
+    <div class="chart-legend">
+      {% for s in series %}
+        <span class="key"><i class="swatch s{{ forloop.index }}"></i>{{ s }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="chart-body">
+      {% for label in labels %}
+        {% assign nums = groups[forloop.index0] | split: "," %}
+        <div class="chart-group">
+          <span class="chart-label">{{ label }}</span>
+          <div class="chart-bars">
+            {% for n in nums %}
+              {% assign f = n | plus: 0.0 %}
+              {% assign pct = f | times: 100.0 | divided_by: max %}
+              <div class="bar-line">
+                <span class="track"><i class="fill s{{ forloop.index }}" style="width: {{ pct }}%"></i></span>
+                <span class="val">{{ unit }}{{ n }}{{ suffix }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if include.note %}<p class="chart-note">{{ include.note }}</p>{% endif %}
+  </figure>
+
+{% elsif include.type == "split" %}
+  {% assign values = include.values | split: "|" %}
+  {% assign total = 0 %}
+  {% for v in values %}{% assign total = total | plus: v %}{% endfor %}
+
+  <figure class="chart">
+    {% if include.title %}<figcaption class="chart-title">{{ include.title }}</figcaption>{% endif %}
+
+    <div class="chart-split">
+      {% for v in values %}
+        {% assign pct = v | times: 100.0 | divided_by: total %}
+        <i class="seg s{{ forloop.index }}" style="width: {{ pct }}%"></i>
+      {% endfor %}
+    </div>
+
+    <div class="chart-legend wide">
+      {% for label in labels %}
+        {% assign v = values[forloop.index0] %}
+        <span class="key"><i class="swatch s{{ forloop.index }}"></i>{{ label }}<b>{{ unit }}{{ v }}{{ suffix }}</b></span>
+      {% endfor %}
+    </div>
+
+    {% if include.note %}<p class="chart-note">{{ include.note }}</p>{% endif %}
+  </figure>
+
+{% else %}
+  {% assign values = include.values | split: "|" %}
+
+  {% assign max = 0 %}
+  {% for v in values %}
+    {% assign f = v | plus: 0.0 %}
+    {% if f > max %}{% assign max = f %}{% endif %}
+  {% endfor %}
+  {% if include.scale %}{% assign max = include.scale | plus: 0.0 %}{% endif %}
+
+  <figure class="chart">
+    {% if include.title %}<figcaption class="chart-title">{{ include.title }}</figcaption>{% endif %}
+
+    <div class="chart-body">
+      {% for label in labels %}
+        {% assign v = values[forloop.index0] %}
+        {% assign f = v | plus: 0.0 %}
+        {% assign pct = f | times: 100.0 | divided_by: max %}
+        {% assign hi = false %}
+        {% if include.highlight == label %}{% assign hi = true %}{% endif %}
+        <div class="bar-row{% if hi %} hi{% endif %}">
+          <span class="chart-label">{{ label }}</span>
+          <span class="track"><i class="fill s1" style="width: {{ pct }}%"></i></span>
+          <span class="val">{{ unit }}{{ v }}{{ suffix }}</span>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if include.note %}<p class="chart-note">{{ include.note }}</p>{% endif %}
+  </figure>
+{% endif %}

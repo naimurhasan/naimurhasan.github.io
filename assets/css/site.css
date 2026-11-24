@@ -294,7 +294,7 @@ a.tag:hover { color: var(--accent); border-color: var(--accent); }
 .work-row h3 { font-size: 1.125rem; margin: 0; }
 .work-row h3 a { text-decoration: none; }
 .work-row h3 a:hover { color: var(--accent); }
-.work-row .what { color: var(--ink-soft); font-size: .9375rem; margin: 4px 0 0; max-width: 60ch; }
+.work-row .what { color: var(--ink-soft); font-size: .9375rem; margin: 4px 0 0; max-width: 60ch; text-align: justify; text-justify: inter-word; hyphens: auto; }
 .work-row .year { font-family: var(--mono); font-size: .6875rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; flex: none; }
 
 .work-meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-top: 11px; }
@@ -317,7 +317,7 @@ a.tag:hover { color: var(--accent); border-color: var(--accent); }
 /* ============================== about / skills ============================== */
 
 .prose { max-width: 64ch; }
-.prose p { color: var(--ink-soft); }
+.prose p { color: var(--ink-soft); text-align: justify; text-justify: inter-word; hyphens: auto; }
 .prose p:first-child { margin-top: 20px; }
 .prose strong { color: var(--ink); font-weight: 500; }
 
@@ -337,7 +337,7 @@ a.tag:hover { color: var(--accent); border-color: var(--accent); }
 .cv .where a { display: inline-flex; align-items: center; gap: 6px; color: var(--ink-soft); text-decoration: none; border-bottom: 1px solid var(--rule); }
 .cv .where a:hover { color: var(--accent); border-color: var(--accent); }
 .cv .where .ico { opacity: .6; }
-.cv .did { color: var(--ink-soft); font-size: .875rem; margin: 6px 0 0; max-width: 62ch; }
+.cv .did { color: var(--ink-soft); font-size: .875rem; margin: 6px 0 0; max-width: 62ch; text-align: justify; text-justify: inter-word; hyphens: auto; }
 .cv-sub { font-family: var(--mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin: 36px 0 0; }
 
 /* ============================== contact ============================== */

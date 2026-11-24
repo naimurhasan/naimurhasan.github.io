@@ -27,11 +27,7 @@ header:
   <span class="badge" style="background: #24292e; color: #d2a8ff; padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; border: 1px solid #30363d;">Transport: TLS ALPN 'h2'</span>
 </div>
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **The Problem HPACK Solved:** In HTTP/1.1, browsers sent 1,000+ bytes of repetitive ASCII headers (Cookies, User-Agents, Cache-Control) with *every single subresource request*.
-> * **Why GZIP wasn't used:** General-purpose GZIP compression on headers enabled the **CRIME vulnerability**, allowing attackers to decrypt sensitive cookies by observing ciphertext lengths.
-> * **HPACK's 3-Layer Compression:** (1) A predefined **Static Table** of 61 common headers, (2) A stateful **Dynamic Table** that caches session headers in a sliding FIFO buffer, and (3) A static **Canonical Huffman Code**.
-> * **The Anti-Bot Fingerprint:** Real browsers send pseudo-headers (`:method`, `:authority`, `:scheme`, `:path`) in an exact, unvarying sequence. Emitting pseudo-headers out of order flags your request instantly.
+> **TL;DR:** HPACK (RFC 7541) eliminates HTTP/1.1 header overhead using static and dynamic indexing tables with Huffman encoding. WAFs inspect pseudo-header ordering and table resizing to fingerprint scrapers that deviate from native browser implementations.
 
 ---
 

@@ -27,11 +27,7 @@ header:
   <span style="color: #8b949e;">&gt; Curve Group:  </span><span style="color: #58a6ff;">Reserved (GREASE) (0x4a4a)</span>
 </div>
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **What GREASE Is:** **G**enerate **R**andom **E**xtensions **A**nd **S**ustain **E**xtensibility ([RFC 8701](https://datatracker.ietf.org/doc/html/rfc8701)). Google Chrome injects intentionally meaningless pseudo-random hex values into its TLS `ClientHello`.
-> * **Why It Exists:** To combat **Protocol Ossification**. Shoddy enterprise middleboxes (firewalls, inspection proxies) hardcoded assumptions that TLS would never change. When TLS 1.3 tried to roll out, broken middleboxes crashed worldwide.
-> * **The Defensive Strategy:** By sending randomized dummy values on *every single connection*, Chrome forces middlebox vendors to write tolerant parsers that properly ignore unrecognized fields.
-> * **How Bots Get Caught:** Standard Python `requests`, Go `net/http`, and curl do not send GREASE. If a client claims to be Chrome but advertises zero GREASE values, anti-bot firewalls detect the imposter instantly.
+> **TL;DR:** GREASE (RFC 8701) injects randomized dummy values into TLS handshakes to prevent middlebox protocol ossification. Because real browsers always send GREASE values, anti-bot filters instantly detect scrapers that fail to generate them.
 
 ---
 

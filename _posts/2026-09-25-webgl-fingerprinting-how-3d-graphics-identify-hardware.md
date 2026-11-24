@@ -27,11 +27,7 @@ header:
   <span style="color: #8b949e;">&gt; RISK ENGINE ASSESSMENT: </span><span style="color: #f85149;">100% CONFIDENCE AUTOMATED LINUX HEADLESS RUNNER</span>
 </div>
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **The Core Mechanism:** WebGL allows JavaScript to execute 3D rendering code directly on the client's Graphics Processing Unit (GPU).
-> * **The Direct Leak:** Calling `WEBGL_debug_renderer_info` reveals the exact make and model of the physical graphics card (e.g., `Apple M2 Max`, `NVIDIA GeForce RTX 4080`).
-> * **The Deep Leak (Shader Math):** Even if the vendor string is masked, different GPU chipsets and driver versions calculate trigonometric floating-point math (e.g. `sin()`, `cos()`) with micro-deviations at the 16th decimal place.
-> * **How Scrapers Get Caught:** Running headless Chrome in Docker without a physical GPU forces Chromium to fall back to **SwiftShader**—Google's CPU software rasterizer. Seeing SwiftShader on a consumer checkout page triggers an immediate bot block.
+> **TL;DR:** WebGL exposes raw GPU hardware models and sub-pixel shader rendering variations to client scripts. Anti-bot systems hash off-screen rendered geometries to unmask virtual machines and detect artificial canvas spoofing.
 
 ---
 

@@ -20,28 +20,15 @@ header:
   og_image: "assets/images/blog/serp-poisoning-explained-hero.jpg"
 ---
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **What It Is:** **SERP Poisoning** (also known as SEO Poisoning or Malvertising) occurs when cybercriminals manipulate search engine rankings or buy Google Sponsored Ads to place malicious domains at the top of search queries for popular software and services.
-> * **When It Happens:** Attackers aggressively target high-intent utility searches—such as *"download VLC"*, *"PuTTY"*, *"Notepad++"*, *"AnyDesk"*, or *"TradingView"*—and breaking current events where users are primed to download executables.
-> * **The Core Problem:** Unlike phishing emails, users actively search for and trust Google's top results. Attackers use **SEO Cloaking**—serving clean, benign content to Googlebot crawlers while redirecting real human visitors to Lumma, Vidar, or Rhadamanthys infostealer payloads.
-> * **The Remedies:** Enforce enterprise protective DNS filtering, deploy ad-blocking to suppress malicious sponsored ad units, verify binary code-signing signatures, and implement automated SERP canary crawlers to monitor brand keyword hijacking.
+> **TL;DR:** Attackers hijack Google search results and sponsored ads for tools like PuTTY and VLC, using cloaking to serve clean pages to crawlers while redirecting real users to infostealers. Defend with protective DNS filtering, ad-blockers, and package managers.
 
 ```mermaid
-sequenceDiagram
-  autonumber
-  participant Attacker as Threat Actor
-  participant Google as Google Search / Ads Edge
-  participant User as Real Human User
-  participant Payload as Malicious Command Server
-
-  Attacker->>Google: Deploy Malicious Ad / Compromised High-Authority Domain
-  Note over Google: Googlebot scans domain: Sees clean benign recipe blog! (Cloaking)
-  User->>Google: Query: "download putty ssh client"
-  Google-->>User: Top Sponsored / Organic Result: compromised-link.com
-  User->>Attacker: Clicks link with genuine Residential IP & Browser UA
-  Note over Attacker: Conditional Redirect! Fingerprint matches real human victim.
-  Attacker-->>User: 302 Redirect to fake-putty-installer.exe
-  User->>Payload: Download & Run Installer -> Infostealer compromises cookies!
+flowchart TD
+  A["1. Attacker Deploys Malicious Google Ad / Cloaked Site"] --> B["2. Googlebot Scans: Sees Benign Decoy Blog (Cloaking)"]
+  A --> C["3. Real User Searches Google: 'download putty'"]
+  C --> D["4. User Clicks Top Link: Gateway Probes IP & User-Agent"]
+  D --> E["5. Residential Human Verified: 302 Redirect to Fake Installer"]
+  E --> F["6. Infostealer Executes: Extracts Cookies, Tokens & Keys"]
 ```
 
 ---
@@ -87,9 +74,9 @@ SERP poisoning completely bypasses the email gateway because **the attack is ini
 flowchart TD
   User["Employee searches Google: 'download advanced ip scanner'"] --> Click["Clicks Top Sponsored Result (Looks Genuine)"]
   Click --> Gate{"Attacker Cloaking Gate"}
-  Gate -- "Is Security Scanner / Sandbox?" --> Benign["Return Clean Educational Page (Status 200)"]
-  Gate -- "Is Real Corporate User?" --> Malicious["Deliver Signed MSI / ISO Payload"]
-  Malicious --> Stealer["Infostealer Extracts Browser Cookies, Slack Tokens, & SSH Keys"]
+  Gate -- "Security Scanner / Sandbox" --> Benign["Return Clean Decoy Page (Status 200)"]
+  Gate -- "Real Corporate User" --> Malicious["Deliver Signed MSI / ISO Payload"]
+  Malicious --> Stealer["Infostealer Extracts Browser Cookies, Slack Tokens & SSH Keys"]
 ```
 
 1. **High User Intent:** The user actively wants the software. They willingly click *"Keep anyway"* or ignore Windows SmartScreen warnings because they assume Google vetted the top link.

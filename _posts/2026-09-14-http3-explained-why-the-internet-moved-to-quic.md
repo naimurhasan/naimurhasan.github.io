@@ -20,9 +20,7 @@ header:
   og_image: "assets/images/blog/http3-quic-explained-hero.jpg"
 ---
 
-> #### ⚡ TL;DR: TCP vs QUIC in 30 Seconds
-> * **Stick with HTTP/2 (TCP) if:** You run low-loss internal microservice meshes within the same datacenter where TCP hardware offloading (TSO/GRO) delivers maximum raw CPU throughput.
-> * **Adopt HTTP/3 (QUIC/UDP) if:** You serve end-users on mobile cellular or residential networks where packet loss, WiFi-to-cellular handoffs, and geographic latency dominate real-world performance.
+> **TL;DR:** HTTP/3 replaces TCP with UDP-based QUIC to eliminate head-of-line blocking, halve connection establishment latency, and enable seamless mobile network handoffs without breaking active sessions.
 
 ```mermaid
 graph TD

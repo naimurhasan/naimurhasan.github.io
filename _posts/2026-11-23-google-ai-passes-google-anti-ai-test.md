@@ -14,10 +14,7 @@ categories:
 author: Naimur Hasan
 ---
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **The Experiment:** Wrapped Google's own multimodal vision models (Gemini) inside a Chrome extension (CaptchaLens) and pointed it directly at Google's live reCAPTCHA v2 and ClickCaptcha demos.
-> * **The Result:** The model passes visual image grids **83% of the time** for roughly **$0.0015 per solve**—proving that modern multimodal AI has made visual puzzles completely obsolete.
-> * **The Big Discovery:** The pictures were never the hard part. Over **70% of scraping failures occur before any challenge is shown**—Google flags headless browser fingerprints, TLS signatures, and IP reputation at the gate.
+> **TL;DR:** Gemini solves Google reCAPTCHA v2 visual puzzles with an 83% pass rate for zsh.0015 per solve, proving image puzzles are obsolete. The real defense lies in upstream browser fingerprinting and IP reputation checks.
 
 ---
 

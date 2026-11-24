@@ -21,11 +21,7 @@ header:
   og_image: "assets/images/blog/what-happens-after-url-in-chrome-hero.jpg"
 ---
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **The Omnibox is a Predictive Engine:** Before you hit Enter, Chrome has already parsed HSTS preload lists and speculative DNS preconnects for likely destinations.
-> * **The Network Service Boundary:** Networking does not run in the renderer. The Browser process coordinates with a sandboxed **Network Service** via Mojo IPC, managing socket pools, DoH resolution, and TLS 1.3 sessions.
-> * **Zero-Copy Payload Transfer:** When HTML arrives, the Network Service writes byte streams directly into shared memory buffers consumed by the **Blink Renderer Process**.
-> * **The Critical Rendering Pipeline:** Blink parses HTML & CSS into DOM and Style trees, generates a Layout geometry tree, paints display items via Skia, and sends GPU draw calls to the physical compositor.
+> **TL;DR:** Typing a URL triggers a multi-process pipeline across Chrome's Browser, Network, Renderer, and GPU processes via Mojo IPC. Understanding this lifecycle reveals why bots that omit internal navigation events get flagged instantly.
 
 ```mermaid
 flowchart TD

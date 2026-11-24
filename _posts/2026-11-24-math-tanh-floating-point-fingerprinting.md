@@ -20,11 +20,7 @@ header:
   og_image: "assets/images/blog/math-tanh-floating-point-fingerprinting-hero.jpg"
 ---
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **The Discrepancy:** The ECMAScript specification allows `Math.tanh()` an approximation tolerance of up to 1 Unit in the Last Place (ULP). Different CPUs (x86_64 vs ARM64) and C standard libraries (`glibc`, `msvcrt`, `libsystem_m`) compute the final bits differently.
-> * **The Hardware Mechanism:** ARM64 processors use hardware **Fused Multiply-Add (FMA)**, performing multiplication and addition in a single rounding step. Older x86 FPU pipelines round twice, creating a deterministic divergence in the 53-bit mantissa.
-> * **The Fingerprint Vector:** Anti-bot engines (CreepJS, DataDome, Cloudflare) evaluate a battery of transcendental math functions (`tanh`, `sinh`, `expm1`). If your `User-Agent` claims to be macOS on Apple Silicon, but `Math.tanh(1)` produces the Linux x86 bit pattern, your scraper is flagged for OS spoofing in under 1 millisecond.
-> * **The Defense:** Never attempt to monkey-patch `Math.tanh` via JavaScript prototype overrides; anti-bot scripts verify native code flags via `toString()` and property descriptors. Use genuine platform runners matching your claimed target architecture.
+> **TL;DR:** Math.tanh() produces different 53-bit mantissa values on ARM64 versus x86_64 because ARM hardware uses Fused Multiply-Add (FMA) with single rounding. Anti-bot engines use these trailing floating-point bits to catch Linux cloud servers spoofing macOS User-Agents.
 
 ---
 

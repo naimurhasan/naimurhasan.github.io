@@ -26,11 +26,7 @@ header:
   <span style="color: #8b949e;">Method: </span><span style="color: #ffa657;">String NavigatorID::userAgent(ExecutionContext* context) const</span>
 </div>
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **The Core Mechanism:** In Chromium, `navigator.userAgent` is not a JavaScript variable. It is a native C++ getter bound to the V8 JavaScript context via WebIDL bindings in `navigator_id.cc`.
-> * **The Monkey-Patching Trap:** Scrapers often "hide" headless mode by executing `Object.defineProperty(navigator, 'userAgent', { get: () => 'Chrome' })`.
-> * **How Bot Engines Spot It:** Real browser getters live on `Navigator.prototype`, not the `navigator` instance. Overriding the property breaks prototype descriptors, function stringification (`toString()`), and creates fatal mismatches with `navigator.userAgentData`.
-> * **The Right Way:** Never monkey-patch `navigator` via JavaScript. Use native browser launch switches (`--user-agent`) so Chromium's internal C++ state remains consistent across both HTTP headers and DOM APIs.
+> **TL;DR:** In Chromium, navigator.userAgent is a native C++ getter, not a plain JavaScript property. Naive prototype patching destroys its native descriptors; safe overrides require Chrome DevTools Protocol flags that preserve Client Hints.
 
 ---
 

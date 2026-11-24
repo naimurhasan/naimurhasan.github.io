@@ -27,11 +27,7 @@ header:
   <span class="badge" style="background: #24292e; color: #d2a8ff; padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; border: 1px solid #30363d;">Standard Port: 443</span>
 </div>
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **A cipher suite is a contract:** It tells the client and server which algorithms to use for (1) Key Exchange, (2) Authentication, (3) Bulk Encryption, and (4) Message Integrity.
-> * **TLS 1.2 bundled everything into one monster name:** e.g., `TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256` specifies all four algorithms in a single string.
-> * **TLS 1.3 killed the clutter:** Key exchange and authentication were moved into separate TLS extensions, leaving only **5 official AEAD cipher suites** in the entire standard.
-> * **Security gotcha:** Anti-bot systems (Cloudflare, Akamai) hash the exact list and order of cipher suites your client advertises in its `ClientHello` (JA3/JA4 fingerprinting).
+> **TL;DR:** Cipher suites negotiate encryption, authentication, and key exchange algorithms between client and server. TLS 1.3 simplified hundreds of legacy combinations down to five AEAD suites, but anti-bot firewalls still fingerprint clients by their advertised cipher suite order.
 
 ---
 

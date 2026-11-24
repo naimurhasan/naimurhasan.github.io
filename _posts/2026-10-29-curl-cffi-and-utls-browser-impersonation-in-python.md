@@ -27,11 +27,7 @@ header:
   <span class="badge" style="background: #24292e; color: #d2a8ff; padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; border: 1px solid #30363d;">Speed: ~30ms (No Headless Browser)</span>
 </div>
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **The Python Requests Trap:** Python's standard `requests` and `urllib3` compile against standard system OpenSSL. Its default cipher lists and TLS extension ordering scream *"automated script"* to Cloudflare and Akamai.
-> * **What uTLS Does:** A fork of Go's `crypto/tls` that allows low-level byte patching of the `ClientHello` packet, mimicking the exact cipher orders, elliptic curves, and extensions of Chrome or Firefox.
-> * **What `curl_cffi` Does:** Wraps `curl-impersonate` using Python CFFI. It compiles against BoringSSL and patches both TLS (JA3/JA4) and HTTP/2 framing (Akamai fingerprint) to match genuine Chrome.
-> * **The Performance Payoff:** Delivers full browser-grade TLS evasion at pure HTTP speeds (15ms–40ms per request) using a fraction of the RAM of headless Playwright.
+> **TL;DR:** Python requests exposes distinctive OpenSSL fingerprints that edge firewalls block immediately. Tools like curl_cffi and uTLS replicate genuine Chrome TLS handshakes and HTTP/2 frames with minimal memory overhead.
 
 ---
 

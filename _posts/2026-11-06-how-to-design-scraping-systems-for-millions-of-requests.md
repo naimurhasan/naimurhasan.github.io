@@ -20,11 +20,7 @@ header:
   og_image: "assets/images/blog/scraping-systems-scale-hero.jpg"
 ---
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **The Core Scaling Bottleneck:** Scraping at scale is not a compute problem—it is a **coordination and backpressure problem**. Unthrottled crawlers get IP pools blacklisted and burn cloud budgets in hours.
-> * **The Distributed Architecture:** Decouple URL discovery from extraction via partitioned queues (Kafka / Redis Streams), placing an asynchronous token-bucket rate limiter in front of each target domain.
-> * **Proxy Circuit Breakers:** Wrap proxy gateways with automated health monitoring. If a proxy subnet returns consecutive `403` or `429` status codes, trip the circuit breaker and quarantine the subnet for 15 minutes.
-> * **Tiered Fetching:** Direct 90% of requests through fast TLS-impersonated HTTP clients (`curl_cffi`); reserve expensive headless browser workers (Playwright) exclusively as an escalation tier for challenged sessions.
+> **TL;DR:** Large-scale scraping fails on queue coordination and proxy backpressure rather than raw compute. Resilient architectures decouple crawling from ingestion using token-bucket rate limiters and circuit breakers.
 
 ```mermaid
 flowchart TD

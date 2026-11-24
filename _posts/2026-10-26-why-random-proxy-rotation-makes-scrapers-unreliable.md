@@ -27,11 +27,7 @@ header:
   <span style="color: #8b949e;">&gt; FRAUD ENGINE VERDICT:    </span><span style="color: #f85149;">IMPOSSIBLE_TRAVEL_EVENT (Session Cookie Hijack Flagged)</span>
 </div>
 
-> #### ⚡ TL;DR in 30 Seconds
-> * **The Novice Mistake:** Configuring a proxy pool to rotate to a new random IP address on *every single HTTP request*.
-> * **Why It Fails:** Real human users do not teleport from Texas to Germany in 200 milliseconds. Rotating IPs mid-session breaks CSRF tokens, session cookies, and triggers **Impossible Travel** fraud rules.
-> * **The TLS Penalty:** Changing IPs on every call destroys **TLS Session Resumption** (Session Tickets / PSK), forcing your scraper to execute an expensive full TLS handshake every time.
-> * **The Production Solution:** Implement **Sticky Session Affinity**. Pin an IP address to a specific worker thread or crawling task for 5–15 minutes, cycling only when a task completes or an unrecoverable block occurs.
+> **TL;DR:** Rotating proxy IPs on every request breaks session state and triggers fraud alerts because real users browse from a single IP. Production crawlers use sticky sessions and rotate only on explicit upstream rate limits.
 
 ---
 

@@ -20,10 +20,7 @@ header:
   og_image: "assets/images/blog/traditional-captcha-vs-invisible-challenges-hero.jpg"
 ---
 
-> #### ⚡ TL;DR: Which Verification Model Fits Your Stack?
-> * **Deploy Invisible Challenges (Cloudflare Turnstile / reCAPTCHA v3) if:** You need frictionless checkout or signup flows where user conversion rate matters and behavioral telemetry handles bot scoring silently.
-> * **Deploy WebAssembly Proof of Work (PoW) if:** You face aggressive Layer 7 DDoS or password-spraying attacks and want to burn attacker CPU cycles without frustrating real users.
-> * **Retire Visual Puzzles (reCAPTCHA v2 / hCaptcha grids):** Multimodal LLMs solve 3x3 image grids with 98%+ accuracy for pennies, leaving visual puzzles as a tax on real humans rather than a barrier to bots.
+> **TL;DR:** Traditional image CAPTCHAs introduce high friction while being cheap for multimodal AI models to solve. Modern defenses rely on invisible behavioral scoring and client-side proof-of-work puzzles.
 
 ```mermaid
 graph TD

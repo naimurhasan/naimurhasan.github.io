@@ -24,15 +24,16 @@ header:
 
 ```mermaid
 flowchart TD
-  Client["Client API Request<br/>q='coffee shops', location='Austin, TX'"] --> UULEGen["1. UULE Generator<br/>Encodes Austin into Canonical Base64 Token"]
-  UULEGen --> ProxyRouter["2. Geo-Targeted Proxy Router<br/>Residential Proxy in Austin, TX"]
-  ProxyRouter --> Google["3. Google Search Edge<br/>google.com/search?q=...&uule=..."]
-  Google --> HTML["Raw Obfuscated SERP HTML"]
-  HTML --> Parser["4. Multi-Variant Layout Parser<br/>Organic, Ads, Local Pack, Snippets"]
-  Parser --> Validator{"Schema Valid?"}
-  Validator -- "Pass" --> Cache["5. Cache & Return Clean JSON"]
-  Validator -- "Layout Broken" --> Fallback["Fallback Heuristic Parser & Alert"]
+  Client["Client API Query<br/>q='coffee shops' • loc='Austin, TX'"] --> UULEGen["1. UULE Generator<br/>Encodes location into Base64 parameter"]
+  UULEGen --> ProxyRouter["2. Geo-Targeted Proxy Router<br/>Residential IP matching target city"]
+  ProxyRouter --> Google["3. Google Search Edge<br/>Fetches localized SERP HTML"]
+  Google --> HTML["4. Obfuscated DOM Parsing<br/>Organic, Ads, Local Pack, Snippets"]
+  HTML --> Validator{"Schema Valid?"}
+  Validator -- "Valid" --> Cache["5. Cache & Deliver JSON Result"]
+  Validator -- "Drift Detected" --> Fallback["Fallback Parser & Alert Trigger"]
 ```
+
+![SERP API Architecture: Location UULE encoding, geo-proxies, obfuscated DOM parsers, and schema validation](/assets/images/blog/what-is-a-serp-api-hero.jpg)
 
 ---
 

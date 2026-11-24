@@ -29,6 +29,8 @@ header:
 
 > **TL;DR:** Dockerizing Chromium removes GPU acceleration and desktop fonts while constraining shared memory (/dev/shm). Without proper font packages and memory flags, containerized browsers crash frequently and get flagged as bots.
 
+![Containerized Chromium Architecture: Shared memory partitions, font dependencies, and process init supervision inside Docker](/assets/images/blog/dockerizing-chromium-hero.jpg)
+
 ---
 
 ## 1. The Two Fatal Docker Traps

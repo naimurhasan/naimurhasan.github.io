@@ -24,13 +24,14 @@ header:
 
 ```mermaid
 flowchart TD
-  Req["Inbound Client Request"] --> T1["Tier 1: Edge Network Filter (L3/L4/L5)<br/>IP ASN / BGP / TLS JA4 / HTTP/2 Frames"]
-  T1 -- "Blacklisted ASN or Broken TLS" --> Block1["403 Forbidden / Edge Block (Cost: $0.00001)"]
-  T1 -- "Pass Edge Criteria" --> T2["Tier 2: Client Telemetry Probe (L7)<br/>WebGL SwiftShader / AudioContext / navigator.webdriver"]
-  T2 -- "Headless Artifacts Detected" --> Challenge["Managed Challenge (Proof of Work / Turnstile)"]
-  T2 -- "Pass Telemetry Criteria" --> T3["Tier 3: Behavioral Risk Scoring<br/>Mouse Dynamics / Request Frequency / Session Graph"]
-  T3 -- "Score < 20 (High Trust)" --> Pass["200 OK: Deliver Application Payload"]
-  T3 -- "Score > 80 (High Threat)" --> Block2["Silent Drop / Hard Block"]
+  Req["Inbound Client Request"] --> T1["<b>Tier 1: Edge Network Filter</b><br/>IP ASN • TLS JA4 • HTTP/2 Frames"]
+  T1 --> V1{"Edge Decision"}
+  V1 -- "Blacklisted / Spoofed" --> Block1["403 Forbidden / Instant Drop"]
+  V1 -- "Clean Connection" --> T2["<b>Tier 2: Client Telemetry Probe</b><br/>WebGL • AudioContext • navigator.webdriver"]
+  T2 --> V2{"Runtime Check"}
+  V2 -- "Bot Flags Found" --> Challenge["Managed Challenge (Proof of Work)"]
+  V2 -- "Valid Browser" --> T3["<b>Tier 3: Behavioral ML Scoring</b><br/>Mouse Dynamics • Flight Times • Cadence"]
+  T3 --> Pass["200 OK: Deliver Application Payload"]
 ```
 
 ---
@@ -40,13 +41,13 @@ flowchart TD
 Before your HTTP request reaches the web application server, edge CDN nodes evaluate the physical connection:
 
 ```mermaid
-flowchart LR
-  Packet["TCP SYN + ClientHello"] --> IP["1. IP Reputation<br/>Datacenter vs Residential ASN"]
-  IP --> TLS["2. TLS Fingerprint<br/>JA3/JA4 Cipher Sequence"]
-  TLS --> H2["3. HTTP/2 Profile<br/>SETTINGS Frames & Header Order"]
-  H2 --> Verdict{"Edge Triage"}
-  Verdict -- "Valid" --> Origin["Forward to Application"]
-  Verdict -- "Spoofed" --> Drop["Instant 403 Block"]
+flowchart TD
+  Packet["TCP SYN + ClientHello Flight"] --> S1["1. IP Reputation (Datacenter vs Residential ASN)"]
+  S1 --> S2["2. TLS Fingerprint (JA4 Cipher Sequence & Extensions)"]
+  S2 --> S3["3. HTTP/2 Profile (SETTINGS Frames & Header Order)"]
+  S3 --> Triage{"Edge Triage"}
+  Triage -- "Authentic" --> Forward["Forward to Application"]
+  Triage -- "Spoofed" --> Drop["Instant 403 Block"]
 ```
 
 * **ASN Classification:** Is the IP from an Amazon AWS datacenter or a consumer Comcast broadband line?
@@ -78,6 +79,8 @@ If a client passes edge filtering, the server returns an initial HTML shell cont
 
 The script encrypts these measurements into a binary payload and submits it via a background HTTP POST (`/cdn-cgi/challenge-platform/...`).
 
+![Multi-layered Bot Detection Architecture: Correlating network handshakes, client runtime telemetry, and behavioral ML](/assets/images/blog/bot-detection-risk-telemetry-layers.jpg)
+
 ---
 
 ## Tier 3: Server-Side Behavioral Machine Learning
@@ -86,11 +89,11 @@ For requests that pass client-side execution, a server-side machine learning eng
 
 ```mermaid
 flowchart TD
-  Session["User Session Stream"] --> Feats["Feature Extraction Engine"]
-  Feats --> F1["Mouse Trajectory: Bezier smoothness vs Human micro-tremors"]
-  Feats --> F2["Keystroke Timing: Keydown/Keyup flight times (Gaussian distribution)"]
-  Feats --> F3["Request Interval: Poisson process vs fixed robotic timers"]
-  F1 & F2 & F3 --> Model["Gradient Boosted Decision Tree (XGBoost / LightGBM)"]
+  Session["User Session Telemetry Stream"] --> Feats["Feature Extraction Engine"]
+  Feats --> F1["<b>1. Mouse Trajectory Analysis</b><br/>Bezier curve smoothness vs micro-tremors"]
+  F1 --> F2["<b>2. Keystroke Dynamics</b><br/>Flight time distributions (Gaussian)"]
+  F2 --> F3["<b>3. Request Cadence</b><br/>Poisson arrival process vs robotic intervals"]
+  F3 --> Model["Gradient Boosted Trees (XGBoost / LightGBM)"]
   Model --> Score["Calculated Threat Score (0.00 to 1.00)"]
 ```
 

@@ -29,6 +29,8 @@ header:
 
 > **TL;DR:** IP reputation scores track ASN classification, historical abuse logs, and subnet contagion. Datacenter IPs are challenged by default, whereas residential and mobile IP pools command higher baseline trust.
 
+![IP Reputation Architecture: ASN classification, threat telemetry, and historical abuse scores](/assets/images/blog/ip-reputation-explained-hero.jpg)
+
 ---
 
 ## 1. The 4 IP Categories: Risk & Reputation Matrix

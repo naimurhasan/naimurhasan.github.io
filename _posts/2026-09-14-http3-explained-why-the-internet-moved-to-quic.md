@@ -23,12 +23,12 @@ header:
 > **TL;DR:** HTTP/3 replaces TCP with UDP-based QUIC to eliminate head-of-line blocking, halve connection establishment latency, and enable seamless mobile network handoffs without breaking active sessions.
 
 ```mermaid
-graph TD
-  Start["New Network Architecture"] --> Env{"Client Environment"}
-  Env -- "Datacenter LAN / Internal Mesh" --> TCP["HTTP/2 over TCP<br/>(Kernel hardware offloading wins)"]
-  Env -- "Public Internet / Mobile Users" --> Loss{"Lossy network / Mobile handoffs?"}
-  Loss -- "Yes (3G/4G/5G/Congested WiFi)" --> QUIC["HTTP/3 over QUIC/UDP<br/>(Zero HOL blocking, instant handoffs)"]
-  Loss -- "Low Loss (< 0.1%)" --> Either["HTTP/2 or HTTP/3<br/>(Both perform well; HTTP/3 faster setup)"]
+flowchart TD
+  Start["New Network Architecture"] --> Env{"Client Deployment Target"}
+  Env -- "Internal Mesh / Datacenter" --> TCP["<b>HTTP/2 over TCP</b><br/>Kernel hardware offloading wins"]
+  Env -- "Public Internet / Mobile" --> Mobile{"Lossy cellular / 5G handoffs?"}
+  Mobile -- "Yes (> 1% loss)" --> QUIC["<b>HTTP/3 over QUIC</b><br/>Zero head-of-line blocking"]
+  Mobile -- "No (Low loss fiber)" --> Either["<b>HTTP/2 or HTTP/3</b><br/>Both perform effectively"]
 ```
 
 ---
@@ -52,17 +52,11 @@ graph TD
 HTTP/2 multiplexed dozens of logical request streams over a single TCP connection. This eliminated application-layer blocking, but exposed a deeper problem in the operating system kernel: **TCP enforces strict byte-order delivery**.
 
 ```mermaid
-sequenceDiagram
-  autonumber
-  participant Client as Mobile Client
-  participant Kernel as TCP Kernel Buffer
-  participant Server as Web Server
-
-  Client->>Kernel: Stream A (Packet 1)
-  Client->>Kernel: Stream B (Packet 2 - LOST ON CELL TOWER!)
-  Client->>Kernel: Stream C (Packet 3)
-  Note over Kernel: TCP halts delivery! Packet 3 is held in kernel buffer waiting for retransmission of Packet 2.
-  Note over Server: Stream C cannot parse until Packet 2 arrives!
+flowchart TD
+  A["Client Sends Streams A, B, and C"] --> B["Packet 2 (Stream B) Dropped on Network"]
+  B --> C["TCP Kernel Buffer Halts Delivery"]
+  C --> D["<b>Head-of-Line Block:</b><br/>Stream C is valid but stalled in kernel"]
+  D --> E["All streams frozen until Packet 2 retransmits"]
 ```
 
 If a cellular network drops a single IP packet belonging to Stream B, the client's TCP stack halts delivery of **all subsequent packets**—even if they belong to completely independent streams (Stream A or Stream C). 
@@ -80,20 +74,15 @@ Before sending an HTTP request, a client must establish transport and encryption
 
 ```mermaid
 flowchart TD
-  subgraph Legacy ["HTTP/2 over TCP + TLS 1.3 (2 RTT)"]
+  subgraph L ["Legacy: HTTP/2 over TCP + TLS 1.3 (2 Full RTTs)"]
     direction TB
-    L1["Flight 1: TCP SYN <--> TCP SYN-ACK (1-RTT)"]
-    L2["Flight 2: TLS 1.3 ClientHello <--> ServerHello (1-RTT)"]
-    L3["Flight 3: First HTTP GET Request Payload"]
-    L1 --> L2 --> L3
+    L1["1. TCP SYN / SYN-ACK (1-RTT)"] --> L2["2. TLS 1.3 Handshake (1-RTT)"] --> L3["3. HTTP GET Data Request"]
   end
-
-  subgraph Modern ["HTTP/3 over QUIC (1 RTT / 0-RTT)"]
+  subgraph M ["Modern: HTTP/3 over QUIC (1 RTT / Instant 0-RTT)"]
     direction TB
-    M1["Flight 1: QUIC Initial (Crypto + Handshake merged) <--> Response (1-RTT)"]
-    M2["Flight 2: First HTTP GET Request Payload (or 0-RTT with Early Data)"]
-    M1 --> M2
+    M1["1. Merged QUIC Transport + TLS 1.3 Key Share (1-RTT)"] --> M2["2. Immediate HTTP GET Data Request"]
   end
+  L --> M
 ```
 
 By embedding TLS 1.3 cryptographic key exchange directly into the initial QUIC transport frame, HTTP/3 cuts initial page load connection latency by 50%.

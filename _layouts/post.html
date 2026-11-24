@@ -73,9 +73,17 @@ layout: default
     mermaid.initialize({
       startOnLoad: false,
       theme: 'base',
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true,
+        curve: 'basis',
+        nodeSpacing: 25,
+        rankSpacing: 35
+      },
       themeVariables: {
         darkMode: isDark,
-        fontFamily: '"IBM Plex Sans", system-ui, sans-serif',
+        fontFamily: '"IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontSize: '14px',
         primaryColor: altBgColor,
         primaryTextColor: textColor,
         primaryBorderColor: accentColor,

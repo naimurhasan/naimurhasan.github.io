@@ -95,7 +95,24 @@ A wide separation gap means clear decisions. Setting the threshold at **0.45 for
 
 ---
 
-## 4. The Real Barrier: 70% of Failures Never Saw a Picture
+## 4. Solving ClickCaptcha: Ordered Sequence Clicks
+
+Beyond 4x4 grids, I tested modern ordered click challenges (ClickCaptcha), where the user must click three specific objects in exact sequential order:
+
+![The ClickCaptcha demo passed, with ordered click markers on the bicycle, key and axe](/assets/images/blog/2026-11-23-clickcaptcha-result.png)
+
+### The Two-Pass Precision Fix
+Naive attempts to ask multimodal models for percentage coordinates fail due to aspect ratio distortion and banner offsets. The winning strategy:
+1. Lay a coarse 4x4 grid over the image and identify the high-confidence candidate sector.
+2. Crop an isolated bounding box and run a fine-grained second pass with weighted centroid averaging.
+
+![CaptchaLens solving the ClickCaptcha demo with ordered clicks](/assets/images/blog/2026-11-23-clickcaptcha-solved.gif)
+
+Every synthetic click now lands within 10 pixels of target centers. With this dual-pass approach, the extension achieved a **100% solve rate** on the live demo in 23 seconds.
+
+---
+
+## 5. The Real Barrier: 70% of Failures Never Saw a Picture
 
 When automated runs fail, they fall into two distinct buckets:
 
@@ -112,7 +129,7 @@ Google scores your browser before drawing a single image. It evaluates:
 
 ---
 
-## 5. What Actually Moves the Needle
+## 6. What Actually Moves the Needle
 
 If you automate web tasks, stop treating CAPTCHAs as a computer vision problem:
 

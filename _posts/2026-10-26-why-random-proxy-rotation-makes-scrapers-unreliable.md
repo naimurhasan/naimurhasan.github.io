@@ -29,6 +29,8 @@ header:
 
 > **TL;DR:** Rotating proxy IPs on every request breaks session state and triggers fraud alerts because real users browse from a single IP. Production crawlers use sticky sessions and rotate only on explicit upstream rate limits.
 
+![Proxy Rotation Failure Modes: Impossible geographic travel, session invalidation, and TLS ticket cache destruction](/assets/images/blog/why-random-proxy-rotation-fails-hero.jpg)
+
 ---
 
 ## 1. The 3 Architectural Disasters of Random IP Rotation

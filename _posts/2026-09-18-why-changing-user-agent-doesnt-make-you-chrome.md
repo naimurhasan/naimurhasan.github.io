@@ -28,6 +28,8 @@ header:
 
 > **TL;DR:** Changing the User-Agent header alters only a single string while leaving your TLS, TCP, and HTTP/2 network fingerprints exposed. Defenses cross-reference these layer signatures, flagging any mismatch in milliseconds.
 
+![The Anatomy of User-Agent Spoofing: Why altering a request header fails against multi-layer TLS and TCP fingerprinting](/assets/images/blog/why-changing-user-agent-doesnt-make-you-chrome-hero.jpg)
+
 ---
 
 ## 1. The Cross-Examination Matrix: What the Server Actually Sees

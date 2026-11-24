@@ -24,13 +24,15 @@ header:
 > **TL;DR:** Chrome's modern `--headless=new` mode shares the full Blink rendering engine with headed Chrome while saving memory. Deprecated `--headless=old` leaks distinct window and GPU properties that anti-bot filters instantly flag.
 
 ```mermaid
-graph TD
+flowchart TD
   Start["Launch Chromium Runner"] --> Target{"Anti-Bot Security Level"}
-  Target -- "High (Cloudflare / DataDome / Kasada)" --> Mode{"Display Server Available?"}
-  Mode -- "Yes (Local or Xvfb Virtual Framebuffer)" --> Headed["Headed Mode + Virtual Display<br/>(Full GPU rasterization, zero headless flags)"]
-  Mode -- "No (Pure headless CLI container)" --> HeadlessNew["--headless=new + Virtual Viewport<br/>(Blink rendering with custom window flags)"]
-  Target -- "Standard Testing / Internal Scraper" --> HeadlessNew
+  Target -- "High (Cloudflare / Kasada)" --> Mode{"Display Server Available?"}
+  Mode -- "Yes (Local / Xvfb)" --> Headed["<b>Headed Mode + Virtual Display</b><br/>Hardware GPU rasterization & zero bot flags"]
+  Mode -- "No (Pure CLI Container)" --> HeadlessNew["<b>--headless=new + Virtual Viewport</b><br/>Modern Blink engine with patched metrics"]
+  Target -- "Internal Testing / Scraping" --> HeadlessNew
 ```
+
+![Headless vs Headed Chrome: Window managers, SwiftShader GPU rasterization, and font antialiasing differences](/assets/images/blog/headless-chrome-vs-headed-hero.jpg)
 
 ---
 
@@ -55,13 +57,15 @@ When you run Chrome without a graphical display, Chromium makes three critical a
 
 ```mermaid
 flowchart TD
-  subgraph Headed ["Desktop Headed Pipeline"]
-    H1["DOM & CSSOM"] --> H2["Skia CPU Paint"] --> H3["Hardware GPU Rasterizer"] --> H4["OS Display Compositor (X11/Wayland/Quartz)"]
+  subgraph H ["1. Desktop Headed Pipeline"]
+    direction TB
+    H1["DOM & CSSOM"] --> H2["Hardware GPU Rasterizer"] --> H3["OS Window Compositor (X11 / Quartz)"]
   end
-
-  subgraph Headless ["Modern Headless Pipeline"]
-    L1["DOM & CSSOM"] --> L2["Skia CPU Paint"] --> L3["SwiftShader CPU Rasterizer"] --> L4["In-Memory Frame Buffer (No OS Compositor)"]
+  subgraph L ["2. Headless Pipeline (--headless=new)"]
+    direction TB
+    L1["DOM & CSSOM"] --> L2["SwiftShader / Virtual GPU"] --> L3["In-Memory Headless Framebuffer"]
   end
+  H --> L
 ```
 
 ### 1. The SwiftShader GPU Giveaway
@@ -109,11 +113,11 @@ const isHeadlessGeometry = (window.outerWidth === window.innerWidth) &&
 Because headless Linux instances lack the native font antialiasing libraries of macOS (CoreText) or Windows (DirectWrite), Chromium renders text glyphs using FreeType with different pixel-snapping behaviors.
 
 ```mermaid
-flowchart LR
-  Text["Canvas text: 'Hello, World!'"] --> Render["Measure text width in pixels"]
-  Render --> M1["macOS Headed: 84.32px"]
-  Render --> M2["Windows Headed: 83.91px"]
-  Render --> M3["Linux Headless: 82.50px (SwiftShader glyph bounds)"]
+flowchart TD
+  Text["Canvas Text Draw: 'Hello, World!'"] --> Render["Measure Text Width in Sub-Pixels via measureText()"]
+  Render --> M1["• macOS Headed Chrome: 84.32px (CoreText Antialiasing)"]
+  Render --> M2["• Windows Headed Chrome: 83.91px (DirectWrite Subpixel)"]
+  Render --> M3["• Linux Headless Container: 82.50px (SwiftShader FreeType)"]
 ```
 
 Bot detection scripts render an off-screen `<canvas>` containing specific Unicode strings and compute a SHA-256 hash of the raw pixel buffer. The headless Linux hash never matches a genuine macOS or Windows desktop footprint.

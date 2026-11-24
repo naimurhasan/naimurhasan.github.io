@@ -23,16 +23,17 @@ header:
 > **TL;DR:** High-throughput scraping requires a two-tier hybrid architecture: lightweight HTTP clients (curl_cffi) handle high-volume static pages at low cost, while headless browsers execute client-side JavaScript challenges.
 
 ```mermaid
-graph TD
-  Start["Incoming Scraping Task"] --> Probe["Tier 1: Fast HTTP Client (curl_cffi)"]
-  Probe --> Check{"Status Code & Payload"}
-  Check -- "HTTP 200 + Valid HTML/JSON" --> Done["Extract Data & Cache Cookies (Cost: $0.0001)"]
-  Check -- "403 / 503 / Turnstile Challenge" --> Escalation["Tier 2: Headless Playwright Worker"]
-  Escalation --> BrowserSolve["Execute JS & Solve Challenge in Browser"]
-  BrowserSolve --> ExtractCookies["Extract Valid Clearance Cookies"]
-  ExtractCookies --> Feedback["Feed Cookies back to Tier 1 HTTP Worker"]
-  BrowserSolve --> Done
+flowchart TD
+  Start["Incoming Scraping Task"] --> Probe["<b>Tier 1: Fast HTTP Client (curl_cffi)</b><br/>Direct request at $0.0001 per call"]
+  Probe --> Check{"Response Status"}
+  Check -- "200 OK (Clean HTML/JSON)" --> Done["Extract Data & Deliver Output"]
+  Check -- "403 / Turnstile Challenge" --> Escalation["<b>Tier 2: Headless Playwright Worker</b><br/>Launch browser & solve JS challenge"]
+  Escalation --> ExtractCookies["Extract Cloudflare Clearance Cookie"]
+  ExtractCookies --> Feedback["Cache Cookie to Tier 1 HTTP Worker"]
+  Feedback --> Done
 ```
+
+![Hybrid Scraping Fleet Architecture: Routing requests between lightweight HTTP workers and headless browsers](/assets/images/blog/search-scrapers-http-vs-browser-hero.jpg)
 
 ---
 
@@ -70,13 +71,11 @@ Teams reacting to browser costs often rewrite everything in Python `requests` or
 Production data providers (like ScrapingBee, Bright Data, and ZenRows) route traffic through a tiered architecture:
 
 ```mermaid
-flowchart LR
-  subgraph Pipeline ["Tiered Routing Pipeline"]
-    direction LR
-    Req["Request Queue"] --> Fast["HTTP Client Pool (90% traffic)"]
-    Fast -.-> |"Challenge Detected"| Slow["Browser Worker Pool (10% traffic)"]
-    Slow -.-> |"Extracted Clearance Cookie"| Fast
-  end
+flowchart TD
+  Req["1. Inbound Request Queue"] --> Fast["2. Fast HTTP Pool (curl_cffi)<br/>Handles 90% of requests at minimal cost"]
+  Fast -.->|"Challenge Encountered"| Slow["3. Headless Browser Pool<br/>Executes JavaScript & Solves Challenges"]
+  Slow -.->|"Return Clearance Cookies"| Fast
+  Fast --> Output["4. Clean Parsed Output"]
 ```
 
 1. **The Fast Path (90% of requests):** Every request starts as an HTTP call using TLS-fingerprinted clients (`curl_cffi` impersonating Chrome). It completes in under 300ms at virtually zero CPU cost.

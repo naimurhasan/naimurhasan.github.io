@@ -24,26 +24,13 @@ header:
 
 ```mermaid
 flowchart TD
-  subgraph ClientApp ["Language Client (Python / C# / Java)"]
-    Code["Your Test / Scraper Script"]
-  end
-
-  subgraph Driver ["Playwright Driver (Node.js Core)"]
-    RPC["JSON-RPC Serializer"]
-    Transport["Multiplexed IPC Router"]
-    RPC <--> Transport
-  end
-
-  subgraph Engine ["Chromium Browser Process"]
-    CDP["CDP Dispatcher"]
-    Context1["BrowserContext A (Isolated Cookies/Storage)"]
-    Context2["BrowserContext B (Isolated Cookies/Storage)"]
-    CDP --> Context1 & Context2
-  end
-
-  Code <-->|"stdin / stdout (JSON-RPC)"| RPC
-  Transport <-->|"File Descriptor 3 & 4 (--remote-debugging-pipe)"| CDP
+  Code["1. User Script (Python / C# / Java)"] <-->|"JSON-RPC over stdin/stdout"| Driver["2. Playwright Central Driver (Node.js)"]
+  Driver <-->|"File Descriptors 3 & 4 (--remote-debugging-pipe)"| CDP["3. Chromium CDP Dispatcher"]
+  CDP --> C1["• BrowserContext A (Isolated Cookies/Storage)"]
+  CDP --> C2["• BrowserContext B (Isolated Cookies/Storage)"]
 ```
+
+![Playwright Architecture: Operating system pipe communication and multiplexed browser drivers](/assets/images/blog/how-playwright-controls-chromium-hero.jpg)
 
 ---
 
@@ -74,17 +61,18 @@ Because communication occurs entirely in kernel memory without traversing the TC
 In legacy automation architectures, isolating two user sessions required launching two separate browser binaries:
 
 ```mermaid
-flowchart LR
-  subgraph Legacy ["Legacy Architecture (High Memory)"]
-    S1["Browser Process 1 (250MB)"]
-    S2["Browser Process 2 (250MB)"]
+flowchart TD
+  subgraph L ["Legacy Architecture (High Memory Overhead)"]
+    direction TB
+    S1["Browser Process 1 (250MB RAM)"] --> S2["Browser Process 2 (250MB RAM)"]
   end
-
-  subgraph Modern ["Playwright Architecture (Low Memory)"]
-    P["Single Shared Chromium Binary (250MB)"] --> C1["BrowserContext 1 (~10MB)"]
-    P --> C2["BrowserContext 2 (~10MB)"]
-    P --> C3["BrowserContext 3 (~10MB)"]
+  subgraph M ["Playwright Context Architecture (Low Memory)"]
+    direction TB
+    P["Single Shared Chromium Binary (250MB)"] --> C1["Context 1 (~10MB)"]
+    C1 --> C2["Context 2 (~10MB)"]
+    C2 --> C3["Context 3 (~10MB)"]
   end
+  L --> M
 ```
 
 A `BrowserContext` operates like a dedicated incognito profile:
@@ -99,13 +87,12 @@ A `BrowserContext` operates like a dedicated incognito profile:
 Before Playwright executes an action (like `page.click("#submit")`), it runs an internal C++ state machine asserting that the element is ready:
 
 ```mermaid
-stateDiagram-v2
-  [*] --> Attached: Query selector in DOM
-  Attached --> Visible: Check CSS display & opacity
-  Visible --> Stable: Check bounding box velocity (not animating)
-  Stable --> Enabled: Check disabled attribute
-  Enabled --> HitTestable: Check coordinates receive pointer events
-  HitTestable --> [*]: Dispatch synthetic OS click event
+flowchart TD
+  S1["1. Attached: Element exists in DOM tree"] --> S2["2. Visible: Element is not hidden or opacity 0"]
+  S2 --> S3["3. Stable: Bounding box velocity is 0 (not animating)"]
+  S3 --> S4["4. Enabled: Element does not carry 'disabled' attribute"]
+  S4 --> S5["5. Hit-Testable: Element receives pointer events at coordinates"]
+  S5 --> S6["Action Dispatched: Real OS synthetic click event"]
 ```
 
 If an element fails any condition (e.g. an overlay modal is fading out), Playwright retries the actionability check continuously up to the configured timeout, eliminating race conditions without manual `sleep` statements.

@@ -916,25 +916,54 @@ a.tag:hover { color: var(--accent); border-color: var(--accent); }
   overflow-x: auto;
   display: flex;
   justify-content: center;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mermaid-wrapper svg {
   background: transparent !important;
   max-width: 100%;
   height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
-/* Force crystal-clear high contrast text for Mermaid sequence diagrams */
+/* Force crystal-clear high contrast legible text for all Mermaid diagrams */
 .mermaid-wrapper svg text,
 .mermaid-wrapper svg text > tspan,
 .mermaid svg text,
-.mermaid text {
+.mermaid text,
+.mermaid-wrapper .label,
+.mermaid-wrapper .node text,
+.mermaid-wrapper .actor text {
   fill: var(--ink) !important;
   color: var(--ink) !important;
-  font-family: var(--mono) !important;
-  font-size: 13px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+  font-size: 14px !important;
   font-weight: 500 !important;
   text-shadow: none !important;
+}
+
+/* Node shapes */
+.mermaid-wrapper .node rect,
+.mermaid-wrapper .node circle,
+.mermaid-wrapper .node polygon {
+  fill: var(--paper) !important;
+  stroke: var(--accent) !important;
+  stroke-width: 1.8px !important;
+}
+
+.mermaid-wrapper .edgePath .path {
+  stroke: var(--ink-soft) !important;
+  stroke-width: 1.8px !important;
+}
+
+.mermaid-wrapper .edgeLabel {
+  background-color: var(--paper-sunk) !important;
+  color: var(--ink) !important;
+  fill: var(--ink) !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
 /* Actors / Lifeline headers */
@@ -942,6 +971,7 @@ a.tag:hover { color: var(--accent); border-color: var(--accent); }
 .mermaid .actor {
   stroke: var(--accent) !important;
   fill: var(--paper) !important;
+  stroke-width: 1.8px !important;
 }
 
 .mermaid-wrapper .actor text,
@@ -977,7 +1007,7 @@ a.tag:hover { color: var(--accent); border-color: var(--accent); }
 .mermaid .messageLine0,
 .mermaid .messageLine1 {
   stroke: var(--ink-soft) !important;
-  stroke-width: 1.5px !important;
+  stroke-width: 1.8px !important;
 }
 
 .mermaid-wrapper .messageText,

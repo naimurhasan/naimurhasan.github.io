@@ -49,6 +49,8 @@ When Selenium launches `chromedriver`, it automatically injects two launch switc
 
 These switches set `AutomationControlledEnabled() = true` inside the Blink rendering process. Every web page, iframe, and web worker loaded in that session inherits `navigator.webdriver === true`.
 
+![W3C WebDriver Specification Flag: Blink C++ AutomationControlled Flag Probing](/assets/images/blog/navigator-webdriver-hero.jpg)
+
 ---
 
 ## 2. Why Tampering Scripts Leak: The Prototype Probe

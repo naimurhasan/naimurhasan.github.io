@@ -31,6 +31,8 @@ flowchart TD
   GPU --> Display["Physical Screen Display (60/120 Hz)"]
 ```
 
+![Chromium Multi-Process Pipeline: Browser, Network Service, Blink Renderer, and GPU Compositing](/assets/images/blog/what-happens-after-url-in-chrome-hero.jpg)
+
 ---
 
 ## Stage 1: The UI & Predictive Preconnect Pipeline
@@ -38,18 +40,11 @@ flowchart TD
 When your keystroke hits the Enter key, Chrome executes three rapid security checks:
 
 ```mermaid
-sequenceDiagram
-  autonumber
-  participant User as Keystroke (Enter)
-  participant UI as Browser Process (Omnibox)
-  participant HSTS as HSTS Preload Table
-  participant DNS as DNS-over-HTTPS (DoH)
-
-  User->>UI: Enter 'google.com'
-  UI->>HSTS: Check in-memory HSTS static table
-  Note over HSTS: Match found! Upgrade 'http://' to 'https://' immediately.
-  UI->>DNS: Resolve IP via DoH (RFC 8484)
-  DNS-->>UI: Return A/AAAA records (IPv6 preferred)
+flowchart TD
+  User["1. User Types URL & Hits Enter"] --> UI["2. Browser Omnibox Controller"]
+  UI --> HSTS["3. Check Static HSTS Preload Table<br/>(Upgrade to https:// automatically)"]
+  HSTS --> DNS["4. DNS-over-HTTPS (DoH RFC 8484)<br/>Resolve IP via Encrypted UDP/TCP"]
+  DNS --> Ready["5. IP Dispatched to Network Service"]
 ```
 
 1. **URL Classification:** Chrome evaluates whether the input is a search query or a valid URL.
@@ -63,17 +58,11 @@ sequenceDiagram
 If no warm socket exists, the Network Service initiates transport negotiation:
 
 ```mermaid
-sequenceDiagram
-  autonumber
-  participant Chrome as Chrome Network Service
-  participant Server as Edge Server
-
-  Chrome->>Server: TCP SYN (L4 Transport Connect)
-  Server-->>Chrome: TCP SYN-ACK
-  Chrome->>Server: TCP ACK + TLS 1.3 ClientHello (Merged Flight!)
-  Server-->>Chrome: TLS 1.3 ServerHello + Encrypted Extensions + Cert
-  Note over Chrome: Session Keys Derived! Handshake Complete in 1-RTT.
-  Chrome->>Server: HTTP/2 HEADERS frame (:method: GET, :path: /)
+flowchart TD
+  Chrome["1. Network Service: TCP SYN"] --> Server["2. Edge Server: TCP SYN-ACK"]
+  Server --> Handshake["3. TLS 1.3 Handshake (1-RTT)<br/>Merged TCP ACK + ClientHello"]
+  Handshake --> Derive["4. Session Keys Derived<br/>Handshake Encrypted in Single RTT"]
+  Derive --> HTTP2["5. HTTP/2 Stream 1 HEADERS Frame<br/>(:method: GET, :path: /)"]
 ```
 
 * **DNS Resolution:** Chrome uses **DNS-over-HTTPS (DoH)**, sending an encrypted JSON or binary DNS query over an existing HTTPS tunnel, preventing ISP sniffing.
@@ -86,13 +75,15 @@ sequenceDiagram
 Once the first chunk of HTML bytes arrives, the Network Service commits the navigation and hands the data stream over to an isolated **Renderer Process**:
 
 ```mermaid
-flowchart LR
-  HTML["HTML Bytes"] --> DOM["DOM Tree"]
-  CSS["CSS Bytes"] --> CSSOM["CSSOM Tree"]
-  DOM & CSSOM --> RenderTree["Render Tree"]
-  RenderTree --> Layout["Layout (Geometry Bounds)"]
-  Layout --> Paint["Paint (Skia Display Items)"]
-  Paint --> Composite["GPU Compositing"]
+flowchart TD
+  subgraph Parsers ["1. Tokenization & Tree Construction"]
+    HTML["HTML Bytes"] --> DOM["DOM Tree"]
+    CSS["CSS Bytes"] --> CSSOM["CSSOM Tree"]
+  end
+  Parsers --> RenderTree["2. Render Tree Generation<br/>(Visible Elements Only)"]
+  RenderTree --> Layout["3. Layout Calculation<br/>(Geometry Bounds & Coordinates)"]
+  Layout --> Paint["4. Paint Operations<br/>(Skia Display Lists)"]
+  Paint --> Composite["5. GPU Compositing<br/>(Hardware Rasterization)"]
 ```
 
 1. **Incremental HTML Parsing:** Blink does not wait for the entire HTML document to download. As chunks arrive, the parser constructs the DOM tree incrementally.

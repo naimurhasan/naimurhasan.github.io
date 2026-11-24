@@ -23,14 +23,14 @@ header:
 > **TL;DR:** Playwright delivers modern multi-browser automation with isolated contexts and auto-waiting; Puppeteer is optimal for lightweight Chrome-specific tooling; Selenium remains the legacy standard for enterprise cross-language grids.
 
 ```mermaid
-graph TD
-  Start["New Automation Project"] --> MultiBrowser{"Need multi-browser<br/>(Firefox + Safari)?"}
-  MultiBrowser -- "Yes" --> FrameworkChoice{"Enterprise legacy grid<br/>or modern async?"}
-  FrameworkChoice -- "Legacy Grid (Java/C#)" --> Selenium["Choose Selenium WebDriver"]
-  FrameworkChoice -- "Modern Async / Fast" --> Playwright["Choose Playwright (Recommended)"]
-  MultiBrowser -- "No (Chromium Only)" --> ChromeSpecial{"Need deep DevTools /<br/>Chrome Extension testing?"}
-  ChromeSpecial -- "Yes" --> Puppeteer["Choose Puppeteer"]
-  ChromeSpecial -- "No" --> Playwright
+flowchart TD
+  Start["New Automation Project"] --> Multi{"Cross-Browser Support Needed?<br/>(Chromium + Firefox + WebKit)"}
+  Multi -- "Yes" --> Arch{"Modern Async vs Legacy Grid?"}
+  Arch -- "Modern / High Concurrency" --> Playwright["<b>Playwright (Recommended)</b><br/>Zero sleep timers & browser contexts"]
+  Arch -- "Legacy Grid (Java/C#)" --> Selenium["<b>Selenium WebDriver</b><br/>Broad language & grid legacy"]
+  Multi -- "Chromium Only" --> ChromeSpec{"Specialized Chrome DevTools / Extensions?"}
+  ChromeSpec -- "Yes" --> Puppeteer["<b>Puppeteer</b><br/>Lightweight Node.js CDP automation"]
+  ChromeSpec -- "No" --> Playwright
 ```
 
 ---
@@ -55,9 +55,9 @@ graph TD
 When Selenium launched in 2004, browsers offered zero native debugging interfaces. Selenium solved this by introducing an intermediate bridge: the **W3C WebDriver protocol**.
 
 ```mermaid
-flowchart LR
-  Script["Test Script (Python/Java)"] -->|"HTTP POST (JSON)"| Driver["chromedriver (Port 9515)"]
-  Driver -->|"Low-level OS Hooks"| Browser["Chromium Window"]
+flowchart TD
+  Script["Test Script (Python / Java / C#)"] -->|"HTTP POST JSON Command"| Driver["chromedriver (Port 9515)"]
+  Driver -->|"Low-level OS Automation"| Browser["Chromium Browser Window"]
 ```
 
 ### Why Selenium Tests Are Inherently Flaky
@@ -75,8 +75,8 @@ Engineers responded by littering codebases with arbitrary polling loops (`WebDri
 In 2017, Google's Chrome DevTools team bypassed external driver binaries entirely by exposing the browser's internal debugging interface: the **Chrome DevTools Protocol (CDP)**.
 
 ```mermaid
-flowchart LR
-  Node["Node.js Application"] <-->|"Persistent WebSocket (Port 9222)"| Chrome["Chromium Process"]
+flowchart TD
+  Node["Node.js Application"] <-->|"Persistent WebSocket (ws://localhost:9222)"| Chrome["Chromium Process (CDP Protocol)"]
 ```
 
 ### The Architectural Shift
@@ -92,10 +92,11 @@ In 2020, Microsoft assembled the core engineering team behind Puppeteer to solve
 
 ```mermaid
 flowchart TD
-  Client["Client Code (Python, TS, Go)"] <-->|"JSON-RPC over stdin/stdout"| Server["Playwright Driver Server"]
-  Server <-->|"CDP Pipe"| Chromium["Custom Chromium"]
-  Server <-->|"Juggler Pipe"| Firefox["Custom Firefox"]
-  Server <-->|"WebKit Inspector"| WebKit["Custom WebKit"]
+  Client["1. Client Script (Python, TS, Go)"] <-->|"JSON-RPC via OS stdio pipe"| Server["2. Playwright Central Driver Server"]
+  Server --> Eng["3. Unified Multi-Browser Engine Drivers"]
+  Eng --> Chromium["• Patched Chromium (via CDP OS Pipe)"]
+  Eng --> Firefox["• Patched Firefox (via Juggler Protocol)"]
+  Eng --> WebKit["• Patched WebKit (via Inspector Protocol)"]
 ```
 
 ### The Three Innovations That Define Playwright

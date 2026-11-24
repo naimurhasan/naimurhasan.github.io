@@ -23,13 +23,15 @@ header:
 > **TL;DR:** Browser sandboxes isolate renderer processes within the OS; containers partition userspace on a shared kernel; virtual machines enforce hardware-level hypervisor boundaries for untrusted execution.
 
 ```mermaid
-graph TD
-  Start["Incoming Untrusted Workload"] --> Trust{"Do you trust the OS kernel<br/>boundary against zero-days?"}
-  Trust -- "No (Multi-tenant arbitrary code execution)" --> VM["Hardware MicroVM (Firecracker / KVM)<br/>(Dedicated guest kernel, hypervisor isolated)"]
-  Trust -- "Yes (Managed scripts / Crawler fleets)" --> WorkloadType{"Is the workload a web page or an entire OS task?"}
-  WorkloadType -- "Web Page / DOM / JavaScript" --> Sandbox["Browser Process Sandbox<br/>(seccomp-bpf + restricted process jail)"]
-  WorkloadType -- "Containerized Worker / Microservice" --> Container["Linux Container (Docker / runc)<br/>(cgroups + namespaces + seccomp)"]
+flowchart TD
+  Start["Incoming Untrusted Workload"] --> Trust{"Trust Host OS Kernel?"}
+  Trust -- "No (Untrusted Code Execution)" --> VM["<b>Hardware MicroVM (Firecracker / KVM)</b><br/>Dedicated guest kernel & hypervisor isolation"]
+  Trust -- "Yes (Managed Fleet)" --> Scope{"Workload Scope?"}
+  Scope -- "Web Page / Untrusted JS" --> Sandbox["<b>Browser Sandbox (Chromium)</b><br/>seccomp-bpf jail with zero file/socket access"]
+  Scope -- "Backend Container / Worker" --> Container["<b>Linux Container (Docker / runc)</b><br/>Namespaces, cgroups, and capabilities"]
 ```
+
+![Three Isolation Paradigms: Browser sandboxes, Linux containers, and hardware microVMs](/assets/images/blog/browser-sandbox-vs-container-vs-vm-hero.jpg)
 
 ---
 
@@ -51,8 +53,8 @@ graph TD
 When Chromium renders a webpage, it splits into two distinct process types:
 
 ```mermaid
-flowchart LR
-  Browser["Privileged Browser Process<br/>(File System, Network, Display)"] <--> |"Mojo IPC (Strictly Typed)"| Renderer["Restricted Renderer Process<br/>(V8 Engine, Blink HTML/CSS)<br/>NO filesystem, NO raw sockets"]
+flowchart TD
+  Browser["<b>1. Privileged Browser Process</b><br/>Direct access to disk, network sockets & display"] <-->|"Mojo IPC (Strictly Typed Messages)"| Renderer["<b>2. Sandboxed Renderer Process</b><br/>V8 Engine & DOM parser (NO disk, NO raw sockets)"]
 ```
 
 1. **The Privileged Browser (Broker) Process:** Owns network sockets, disk I/O, window compositing, and user input events.
@@ -68,13 +70,14 @@ Containers do not virtualize hardware. A Docker container is simply a standard L
 
 ```mermaid
 flowchart TD
-  subgraph HostKernel ["Shared Linux Host Kernel"]
-    N1["PID Namespace (Isolated process list)"]
-    N2["Mount Namespace (Isolated filesystem root)"]
-    N3["Network Namespace (Isolated virtual NIC)"]
-    N4["cgroups (CPU & Memory throttling)"]
+  subgraph HostKernel ["Shared Linux Host Kernel Isolation"]
+    direction TB
+    N1["• PID Namespace: Isolated process tree"]
+    N2["• Mount Namespace: Isolated filesystem root"]
+    N3["• Network Namespace: Dedicated virtual interface"]
+    N4["• cgroups: Strict CPU & RAM resource quotas"]
   end
-  N1 & N2 & N3 & N4 --> Container["Docker Container Worker"]
+  HostKernel --> Container["Docker Container Worker Process"]
 ```
 
 ### The Container Security Trap
@@ -90,9 +93,9 @@ For true multi-tenant untrusted workloads, AWS developed **Firecracker**—a min
 
 ```mermaid
 flowchart TD
-  Hardware["Physical Hardware (CPU Virtualization Flags)"] --> Hypervisor["Type-1 / Type-2 Hypervisor (KVM / Firecracker)"]
-  Hypervisor --> VM1["Guest VM 1: Independent Linux Kernel"]
-  Hypervisor --> VM2["Guest VM 2: Independent Linux Kernel"]
+  Hardware["Physical Hardware (CPU Intel VT-x / AMD-V)"] --> Hypervisor["Type-1 / Type-2 Hypervisor (KVM / Firecracker)"]
+  Hypervisor --> VM1["Guest VM 1 (Dedicated Guest Kernel)"]
+  Hypervisor --> VM2["Guest VM 2 (Dedicated Guest Kernel)"]
 ```
 
 * **Dedicated Kernel:** Each microVM boots its own tiny 5MB Linux kernel in 10 milliseconds.

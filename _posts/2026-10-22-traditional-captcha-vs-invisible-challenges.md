@@ -23,12 +23,11 @@ header:
 > **TL;DR:** Traditional image CAPTCHAs introduce high friction while being cheap for multimodal AI models to solve. Modern defenses rely on invisible behavioral scoring and client-side proof-of-work puzzles.
 
 ```mermaid
-graph TD
-  Start["Inbound User Request"] --> ThreatModel{"Threat & Conversion Model"}
-  ThreatModel -- "E-Commerce / Consumer App (High UX Sensitivity)" --> Invisible["Invisible Challenge<br/>(Turnstile / reCAPTCHA v3)"]
-  ThreatModel -- "API / High-Volume Rate Limiting" --> PoW["Cryptographic Proof of Work<br/>(Forces client CPU hashing)"]
-  ThreatModel -- "Suspicious Risk Threshold Exceeded" --> StepUp{"Step-Up Verification Needed?"}
-  StepUp -- "Yes" --> Biometric["Passive Behavioral / Device Attestation<br/>(WebAuthn / Apple Private Access Tokens)"]
+flowchart TD
+  Start["Inbound User Request"] --> Threat{"Application Threat Model"}
+  Threat -- "Consumer App (High UX Sensitivity)" --> Invisible["<b>Invisible Challenge</b><br/>Cloudflare Turnstile / reCAPTCHA v3"]
+  Threat -- "High-Volume Scraping / API Attack" --> PoW["<b>Cryptographic Proof of Work</b><br/>Client burns CPU cycles hashing nonces"]
+  Threat -- "High-Risk Fraud / Account Takeover" --> Biometric["<b>Hardware Device Attestation</b><br/>WebAuthn / Apple Private Access Tokens"]
 ```
 
 ---
@@ -53,10 +52,10 @@ For two decades, CAPTCHAs relied on an assumption: *computers struggle with unst
 Between 2023 and 2025, modern vision-language models and specialized convolutional networks completely inverted that economic equation:
 
 ```mermaid
-flowchart LR
-  Bot["Scraper / Bot"] -->|"Screenshot 3x3 Grid"| AI["Vision Model / Solver API"]
-  AI -->|"Identify 'Traffic Lights' in 200ms"| Solution["[0, 1, 4] Coordinates"]
-  Solution -->|"Simulate Click Events"| Pass["CAPTCHA Solved ($0.001 Cost)"]
+flowchart TD
+  Bot["1. Automated Bot Captures 3x3 Puzzle Grid"] --> AI["2. Multimodal Vision Model (e.g. Gemini)"]
+  AI --> Solution["3. Model Returns Matching Bounding Coordinates<br/>(Latency: ~250ms • Cost: $0.001)"]
+  Solution --> Pass["4. Coordinates Clicked: CAPTCHA Bypassed"]
 ```
 
 Today, automated solvers resolve visual CAPTCHAs faster and with higher statistical accuracy than tired human beings. Continuing to force users to click fire hydrants only punishes real customers while doing nothing to deter automated operators with API keys.
@@ -68,19 +67,12 @@ Today, automated solvers resolve visual CAPTCHAs faster and with higher statisti
 Modern invisible engines like Cloudflare Turnstile do not ask *"Can you solve this puzzle?"* Instead, they ask: *"Does your environment behave like a real human running a genuine operating system?"*
 
 ```mermaid
-sequenceDiagram
-  autonumber
-  participant Browser as User Browser
-  participant Engine as Turnstile Wasm Engine
-  participant Edge as Security Edge
-
-  Browser->>Edge: Request Protected Resource
-  Edge-->>Browser: Return Challenge Wrapper (JS/Wasm)
-  Browser->>Engine: Run Hardware & Behavioral Telemetry
-  Note over Engine: Inspect WebGL, AudioContext, Canvas, Pointer Trajectory, and OS Timers
-  Engine->>Browser: Compute Nonce for Cryptographic PoW
-  Browser->>Edge: Submit Clearance Token
-  Edge-->>Browser: HTTP 200 (Access Granted)
+flowchart TD
+  Req["1. Browser Requests Protected Resource"] --> Edge["2. Edge Serves Lightweight Challenge JS/Wasm"]
+  Edge --> Telemetry["3. Wasm Executes Forensic Checks<br/>(WebGL, AudioContext, Canvas & Pointer Trajectory)"]
+  Telemetry --> PoW["4. Browser Solves Cryptographic PoW Puzzle"]
+  PoW --> Submit["5. Encrypted Clearance Token Submitted to Edge"]
+  Submit --> Grant["6. Clearance Validated: HTTP 200 Granted"]
 ```
 
 ### The Three Telemetry Pillars:

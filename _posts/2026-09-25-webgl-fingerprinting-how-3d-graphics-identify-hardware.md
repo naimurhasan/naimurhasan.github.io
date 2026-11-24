@@ -93,6 +93,8 @@ Because IEEE-754 floating-point hardware implementations vary across NVIDIA, AMD
 3. It computes a SHA-256 hash of the raw RGBA byte buffer.
 4. An emulated SwiftShader running on an Intel Xeon CPU produces different mathematical values than a real Apple Silicon chip, exposing the mock.
 
+![WebGL 3D Canvas Fingerprinting: Off-screen shader rendering, GPU unmasked telemetry, and pixel buffer hashing](/assets/images/blog/webgl-3d-fingerprint-canvas.jpg)
+
 ---
 
 ## Hands-On Verification: Inspect Your WebGL Fingerprint

@@ -29,6 +29,8 @@ header:
 
 > **TL;DR:** The Web Audio API exposes unique floating-point variations created by host CPU math and audio DSP pipelines. Security scripts hash offscreen audio buffers to fingerprint devices without requesting microphone permissions.
 
+![Web Audio API DSP Synthesis: Oscillator frequency waves, non-linear compressor math, and buffer hashing](/assets/images/blog/audiocontext-fingerprinting-hero.jpg)
+
 ---
 
 ## 1. The OfflineAudioContext Pipeline

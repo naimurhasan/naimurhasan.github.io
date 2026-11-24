@@ -24,21 +24,17 @@ header:
 
 ```mermaid
 flowchart TD
-  Scheduler["1. Job Scheduler / URL Ingestion"] --> Queue["2. Partitioned Queue (Redis Streams / Kafka)<br/>Partitioned by Domain Hash"]
-  
-  Queue --> Limiter["3. Token Bucket Rate Limiter<br/>Per-Domain Concurrency & Delay"]
-  
-  Limiter --> WorkerPool["4. Worker Execution Cluster"]
-  
-  WorkerPool --> Router{"Challenge Encountered?"}
-  Router -- "No (90% traffic)" --> HTTPClient["Fast HTTP Worker (curl_cffi)"]
-  Router -- "Yes (10% traffic)" --> BrowserWorker["Headless Playwright Pool"]
-  
-  HTTPClient & BrowserWorker --> ProxyManager["5. Proxy Gateway & Circuit Breakers"]
-  ProxyManager --> Target["Target Websites"]
-  
-  Target --> Validator["6. Schema Validation & Delta Storage (ClickHouse/S3)"]
+  Scheduler["1. Job Scheduler / Ingestion"] --> Queue["2. Partitioned Queue (Redis Streams / Kafka)<br/>Partitioned by domain key hash"]
+  Queue --> Limiter["3. Token Bucket Rate Limiter<br/>Enforces per-domain concurrency"]
+  Limiter --> Router{"4. Challenge Type?"}
+  Router -- "Standard HTML/API" --> HTTP["• Fast HTTP Worker (curl_cffi)"]
+  Router -- "Dynamic JS / WAF" --> Browser["• Headless Playwright Worker"]
+  HTTP --> Proxy["5. Proxy Gateway with Circuit Breakers"]
+  Browser --> Proxy
+  Proxy --> Storage["6. Schema Validator & S3 Storage"]
 ```
+
+![Distributed Scraping Fleet Architecture: Domain queues, rate limiters, proxy circuit breakers, and raw data storage](/assets/images/blog/designing-high-scale-scraping-systems-hero.jpg)
 
 ---
 
@@ -49,11 +45,14 @@ When crawling hundreds of different websites simultaneously, **never dump all UR
 A burst of 100,000 URLs from `target-a.com` will starve workers crawling `target-b.com`, or trigger an immediate DDoS alert on `target-a.com` by hitting it with 500 concurrent connections.
 
 ```mermaid
-flowchart LR
-  Ingest["Incoming Crawl Jobs"] --> Partitioner["Domain Hash Partitioner"]
-  Partitioner --> Q1["Queue: domain_amazon (Max 5 req/s)"]
-  Partitioner --> Q2["Queue: domain_walmart (Max 2 req/s)"]
-  Partitioner --> Q3["Queue: domain_target  (Max 3 req/s)"]
+flowchart TD
+  Ingest["1. Inbound Crawl Request Stream"] --> Partitioner["2. Domain Hash Partitioner"]
+  Partitioner --> Q1["• Queue A (Amazon): Max 5 req/s concurrency"]
+  Partitioner --> Q2["• Queue B (Walmart): Max 2 req/s concurrency"]
+  Partitioner --> Q3["• Queue C (Target): Max 3 req/s concurrency"]
+  Q1 --> Workers["3. Dedicated Consumer Workers"]
+  Q2 --> Workers
+  Q3 --> Workers
 ```
 
 * **Domain Partitioning:** Route tasks into separate queues indexed by domain hash (`hash(url.hostname) % num_partitions`).
@@ -109,12 +108,11 @@ If `acquire_rate_token("target.com")` returns `False`, the worker sleeps or yiel
 At 10,000,000 requests per day, proxy failures are not an exception—they are a continuous baseline reality.
 
 ```mermaid
-stateDiagram-v2
-  [*] --> Closed: Normal Operation (Proxy Healthy)
-  Closed --> Open: Consecutive 403 / 429 errors > threshold
-  Open --> HalfOpen: Quarantine period expires (15 min cooldown)
-  HalfOpen --> Closed: Probe requests succeed
-  HalfOpen --> Open: Probe requests fail
+flowchart TD
+  Closed["<b>State: Closed (Normal Operation)</b><br/>Proxy pool healthy • Traffic flowing normally"] -->|Consecutive 403/429 errors spike| Open["<b>State: Open (Quarantine Triggered)</b><br/>Proxy marked unhealthy • 15 min cooldown"]
+  Open -->|Cooldown timer expires| HalfOpen["<b>State: Half-Open (Canary Testing)</b><br/>Send limited probe canary requests"]
+  HalfOpen -->|Canaries Succeed| Closed
+  HalfOpen -->|Canaries Fail| Open
 ```
 
 * **Closed (Normal):** Requests route through the proxy subnet normally.

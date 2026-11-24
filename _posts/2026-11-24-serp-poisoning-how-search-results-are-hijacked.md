@@ -24,11 +24,11 @@ header:
 
 ```mermaid
 flowchart TD
-  A["1. Attacker Deploys Malicious Google Ad / Cloaked Site"] --> B["2. Googlebot Scans: Sees Benign Decoy Blog (Cloaking)"]
-  A --> C["3. Real User Searches Google: 'download putty'"]
-  C --> D["4. User Clicks Top Link: Gateway Probes IP & User-Agent"]
-  D --> E["5. Residential Human Verified: 302 Redirect to Fake Installer"]
-  E --> F["6. Infostealer Executes: Extracts Cookies, Tokens & Keys"]
+  A["1. Attacker Deploys Cloaked Site & Google Ad"] --> B["2. Crawler Scan: Serves Benign Recipe Blog"]
+  B --> C["3. Real User Searches Google & Clicks Ad"]
+  C --> D["4. Gateway Probes IP: Residential Human Verified"]
+  D --> E["5. 302 Redirect to Weaponized Fake Installer"]
+  E --> F["6. Infostealer Executes: Steals Cookies & Tokens"]
 ```
 
 ---
@@ -61,6 +61,8 @@ Search engine crawlers evaluate pages to detect malware. To evade Google Safe Br
 
 ### Vector 3: Hijacking Expired High-Authority Domains
 Attackers acquire expired domains that previously belonged to universities, government agencies, or established publications. Because these domains retain historical PageRank and thousands of trusted backlinks, search algorithms immediately trust them, allowing malicious download hubs to rank on Google's first page within days.
+
+![Anatomy of SERP Poisoning: Malvertising ad units and cloaking gateways intercepting legitimate software searches](/assets/images/blog/serp-poisoning-malvertising-anatomy.jpg)
 
 ---
 

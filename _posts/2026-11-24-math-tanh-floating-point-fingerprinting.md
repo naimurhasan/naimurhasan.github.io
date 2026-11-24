@@ -73,6 +73,8 @@ On x86 architectures without AVX-FMA extensions, the CPU multiplies `a * b`, rou
 
 This **double-rounding artifact** flips the least-significant bit (the 53rd bit of the mantissa), producing `...7648` instead of `...7649`.
 
+![Silicon Arithmetic Architecture: ARM64 FMA Single Rounding vs x86 Double Rounding](/assets/images/blog/math-tanh-fma-silicon-comparison.jpg)
+
 ---
 
 ## 3. The 4-Way Hardware & OS Matrix

@@ -27,7 +27,7 @@ header:
   <span style="color: #8b949e;">&gt; Rendered Buffer Hash: </span><span style="color: #58a6ff;">124.043475210984128...</span>
 </div>
 
-> #### ⚡ 30-Second Forensic Breakdown
+> #### ⚡ TL;DR in 30 Seconds
 > * **Zero Permissions Required:** You do not need to grant microphone or speaker permissions to be fingerprinted by sound.
 > * **How It Works:** JavaScript uses the **Web Audio API** (`OfflineAudioContext`) to generate an inaudible synthetic sound wave, pipes it through a digital dynamics compressor, and renders it directly to memory in milliseconds.
 > * **The Hardware Deviation:** Differences in hardware floating-point math, CPU architecture (ARM vs x86_64), and OS audio drivers (CoreAudio on macOS, WASAPI on Windows, ALSA/PulseAudio on Linux) introduce micro-deviations at the 15th decimal place.

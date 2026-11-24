@@ -27,7 +27,7 @@ header:
   <span class="badge" style="background: #24292e; color: #d2a8ff; padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; border: 1px solid #30363d;">Metrics: Fraud Score / ASN Type</span>
 </div>
 
-> #### ⚡ 30-Second Field Reference
+> #### ⚡ TL;DR in 30 Seconds
 > * **An IP is not a blank slate:** When you buy a "clean" proxy or spin up an AWS EC2 instance, that IP address has likely been routed, reused, and scanned thousands of times over the past 20 years.
 > * **ASN Classification is Instant:** Websites immediately categorize your IP using its Autonomous System Number (ASN). Datacenter ASNs (AWS, DigitalOcean, Hetzner) start with an elevated risk baseline.
 > * **Reverse DNS (PTR) Leaks Hostnames:** If your IP resolves to `mail-scanner.relay.datacenter.net` or has no PTR record at all, anti-bot firewalls detect non-residential traffic instantly.

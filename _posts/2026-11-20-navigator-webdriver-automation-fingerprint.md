@@ -27,7 +27,7 @@ header:
   <span style="color: #8b949e;">&gt; RISK ENGINE ACTION: </span><span style="color: #f85149;">SERVE HARD MANAGED CHALLENGE (Access Denied)</span>
 </div>
 
-> #### ⚡ 30-Second Forensic Breakdown
+> #### ⚡ TL;DR in 30 Seconds
 > * **The W3C Standard:** Under the official W3C WebDriver specification, whenever a browser is controlled by automated testing tools (Selenium, Puppeteer), the browser engine **must** expose `navigator.webdriver = true`.
 > * **The Implementation in Chromium:** Chromium binds this property in C++ via `NavigatorAutomationInformation`. It is activated whenever the browser starts with `--enable-automation` or connects to ChromeDriver.
 > * **The Naive Evasion Trap:** Scrapers often inject `delete Object.getPrototypeOf(navigator).webdriver` or monkey-patch the getter. Anti-bot scripts detect this tampering in 1 millisecond by probing property descriptors and function prototype chains.

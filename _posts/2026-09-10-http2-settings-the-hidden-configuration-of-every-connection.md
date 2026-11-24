@@ -27,7 +27,7 @@ header:
   <span class="badge" style="background: #24292e; color: #d2a8ff; padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; border: 1px solid #30363d;">Stream ID: 0x00 (Connection-Level)</span>
 </div>
 
-> #### ⚡ 30-Second Field Reference
+> #### ⚡ TL;DR in 30 Seconds
 > * **The First Words of HTTP/2:** Immediately after the TLS handshake and the 24-byte client preface (`PRI * HTTP/2.0...`), the client sends a `SETTINGS` frame.
 > * **What It Configures:** Buffer sizes, flow control windows, and maximum frame limits. Both endpoints must acknowledge receipt via an empty `SETTINGS` frame with the `ACK` flag (`0x01`).
 > * **The Wire Anatomy:** Each setting is a strict **6-byte payload**: a 2-byte 16-bit Identifier followed by a 4-byte 32-bit Value.

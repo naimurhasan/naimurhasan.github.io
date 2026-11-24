@@ -20,7 +20,7 @@ header:
   og_image: "assets/images/blog/how-playwright-controls-chromium-hero.jpg"
 ---
 
-> #### ⚡ 30-Second Architectural Blueprint
+> #### ⚡ TL;DR in 30 Seconds
 > * **No Network Ports:** Unlike Selenium or Puppeteer, Playwright avoids local TCP/WebSocket ports (`localhost:9222`). It communicates with Chromium over standard operating system I/O streams: `--remote-debugging-pipe`.
 > * **The Multiplexed Driver Server:** Python, TypeScript, and C# clients communicate with a single background Node.js driver process via JSON-RPC over `stdin`/`stdout`.
 > * **Lightweight `BrowserContext` Isolation:** Playwright does not launch a new Chromium instance for every test. It provisions isolated `BrowserContext` sandboxes sharing a single browser binary in under 10 milliseconds.

@@ -20,7 +20,7 @@ header:
   og_image: "assets/images/blog/browser-sandbox-vs-container-vs-vm-hero.jpg"
 ---
 
-> #### ⚡ Quick Pick: Which Isolation Layer Do You Need?
+> #### ⚡ TL;DR: Which Isolation Layer Do You Need?
 > * **Deploy Browser Sandboxing (Chromium multi-process) if:** You run user-facing web browsers or render untrusted web pages where per-tab security boundaries must execute with zero user-perceptible latency (< 15ms).
 > * **Deploy Linux Containers (Docker / OCI) if:** You run multi-tenant backend scraping workers or automated crawler fleets sharing a trusted host OS kernel with high density and fast startup (< 500ms).
 > * **Deploy MicroVMs (Firecracker / KVM) if:** You execute completely arbitrary, untrusted tenant code (e.g. serverless functions, untrusted scrapers) where kernel-sharing poses an unacceptable zero-day escape risk.

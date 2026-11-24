@@ -21,7 +21,7 @@ header:
   og_image: "assets/images/blog/what-happens-after-url-in-chrome-hero.jpg"
 ---
 
-> #### ⚡ 30-Second Architectural Blueprint
+> #### ⚡ TL;DR in 30 Seconds
 > * **The Omnibox is a Predictive Engine:** Before you hit Enter, Chrome has already parsed HSTS preload lists and speculative DNS preconnects for likely destinations.
 > * **The Network Service Boundary:** Networking does not run in the renderer. The Browser process coordinates with a sandboxed **Network Service** via Mojo IPC, managing socket pools, DoH resolution, and TLS 1.3 sessions.
 > * **Zero-Copy Payload Transfer:** When HTML arrives, the Network Service writes byte streams directly into shared memory buffers consumed by the **Blink Renderer Process**.

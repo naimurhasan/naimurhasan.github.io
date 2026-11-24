@@ -20,7 +20,7 @@ header:
   og_image: "assets/images/blog/how-bot-detection-works-hero.jpg"
 ---
 
-> #### ⚡ 30-Second Architectural Blueprint
+> #### ⚡ TL;DR in 30 Seconds
 > * **It's a Multi-Stage Filter, Not a Gate:** Modern bot detection (Cloudflare, DataDome, Akamai, Kasada) operates as a multi-tier pipeline. Over 80% of automated bots are blocked at the network edge before a single byte of application code executes.
 > * **Tier 1 (Edge Network - 0ms):** Validates IP reputation, ASN classification, TCP window sizes, TLS fingerprints (JA3/JA4), and HTTP/2 pseudo-header sequencing.
 > * **Tier 2 (Client-Side Telemetry - 500ms):** Injects encrypted JavaScript payloads to probe WebGL GPU hardware, audio DSP waveforms, screen geometry, and DOM prototype tampering.

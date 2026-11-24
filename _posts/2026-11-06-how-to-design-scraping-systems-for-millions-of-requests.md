@@ -20,7 +20,7 @@ header:
   og_image: "assets/images/blog/scraping-systems-scale-hero.jpg"
 ---
 
-> #### ⚡ 30-Second Architectural Blueprint
+> #### ⚡ TL;DR in 30 Seconds
 > * **The Core Scaling Bottleneck:** Scraping at scale is not a compute problem—it is a **coordination and backpressure problem**. Unthrottled crawlers get IP pools blacklisted and burn cloud budgets in hours.
 > * **The Distributed Architecture:** Decouple URL discovery from extraction via partitioned queues (Kafka / Redis Streams), placing an asynchronous token-bucket rate limiter in front of each target domain.
 > * **Proxy Circuit Breakers:** Wrap proxy gateways with automated health monitoring. If a proxy subnet returns consecutive `403` or `429` status codes, trip the circuit breaker and quarantine the subnet for 15 minutes.

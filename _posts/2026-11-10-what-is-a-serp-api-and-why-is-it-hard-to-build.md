@@ -20,7 +20,7 @@ header:
   og_image: "assets/images/blog/what-is-a-serp-api-hero.jpg"
 ---
 
-> #### ⚡ 30-Second Architectural Blueprint
+> #### ⚡ TL;DR in 30 Seconds
 > * **What a SERP API Does:** Accepts a query, target location, and device type, fetches the live Search Engine Results Page (SERP) from Google or Bing, and returns structured JSON (organic links, rankings, ads, knowledge graphs).
 > * **Why It's Deceptively Hard:** Google does not have a single search layout. It runs hundreds of simultaneous multi-variant A/B tests with completely obfuscated, non-semantic CSS class names (`.MjjYud`, `.yuRUbf`) that mutate weekly.
 > * **The Geo-Targeting Challenge:** Delivering city-level accuracy (e.g. *restaurants in Austin, TX*) requires reverse-engineering Google's proprietary **UULE Base64 coordinate encoding** combined with localized residential proxy exit nodes.

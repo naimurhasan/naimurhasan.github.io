@@ -20,7 +20,7 @@ header:
   og_image: "assets/images/blog/selenium-vs-puppeteer-vs-playwright-hero.jpg"
 ---
 
-> #### ⚡ Quick Pick Decision Rubric
+> #### ⚡ TL;DR: Quick Pick Decision Rubric
 > * **Pick Playwright if:** You need resilient end-to-end tests across Chromium, Firefox, and WebKit with zero sleep timers, or high-concurrency scraping using isolated `BrowserContexts`.
 > * **Pick Puppeteer if:** You build Chrome-specific extensions, DevTools performance profiling tools, or lightweight Node.js scraping workers.
 > * **Pick Selenium if:** You support legacy enterprise Java/C# grids requiring remote physical browsers (e.g., Safari on iOS, legacy real devices).

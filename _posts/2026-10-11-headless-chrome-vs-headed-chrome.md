@@ -21,7 +21,7 @@ header:
   og_image: "assets/images/blog/headless-chrome-vs-headed-hero.jpg"
 ---
 
-> #### ⚡ Quick Pick: Which Chrome Mode Should You Run?
+> #### ⚡ TL;DR: Which Chrome Mode Should You Run?
 > * **Run Headed Mode if:** You scrape high-security Cloudflare/DataDome targets where SwiftShader CPU fallbacks or window geometry anomalies trigger immediate managed challenges.
 > * **Run `--headless=new` if:** You run modern end-to-end tests or high-throughput scraping on Linux servers with a virtual display buffer (`xvfb`), getting real Chrome feature parity with low resource costs.
 > * **Never run `--headless=old` (legacy Content Shell):** It lacks the Chrome browser process architecture, leaks dozens of missing APIs, and is flagged by bot detection in under 5 milliseconds.

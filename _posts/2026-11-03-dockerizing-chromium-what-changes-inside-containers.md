@@ -27,7 +27,7 @@ header:
   <span class="badge" style="background: #24292e; color: #d2a8ff; padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 0.85rem; border: 1px solid #30363d;">Security: seccomp-bpf & User Namespaces</span>
 </div>
 
-> #### ⚡ 30-Second Field Reference
+> #### ⚡ TL;DR in 30 Seconds
 > * **The 64MB Crash Trap:** Docker defaults `/dev/shm` to a tiny 64MB partition. Chromium uses `/dev/shm` for renderer-to-compositor shared memory. Loading a complex website exhausts 64MB and crashes tabs with `SIGSEGV` or `Target closed`.
 > * **The Fix:** Mount a larger shared memory volume: `--shm-size=1gb` or pass `--disable-dev-shm-usage` to fall back to disk memory.
 > * **The Zombie Process Apocalypse:** Chromium spawns dozens of helper processes. Without a real init system (`PID 1`), orphaned zombie processes accumulate until the container's PID limit is exhausted. Always run `dumb-init` or Docker's `--init` flag.

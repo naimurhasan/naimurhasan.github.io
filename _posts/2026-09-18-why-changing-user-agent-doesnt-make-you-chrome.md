@@ -26,7 +26,7 @@ header:
   <span style="color: #8b949e;">&gt; WAF Verdict:   </span><span style="color: #f85149;">FLAGGED_IMPOSTER (TLS JA3: Python-OpenSSL / OS Mismatch)</span>
 </div>
 
-> #### ⚡ 30-Second Forensic Breakdown
+> #### ⚡ TL;DR in 30 Seconds
 > * **The Novice Fallacy:** Beginners assume a website identifies clients by reading the `User-Agent` HTTP header. 
 > * **The Reality:** The `User-Agent` string is untrusted user input. Modern firewalls (Cloudflare, Akamai, DataDome) don't believe your headers—they cross-examine them against low-level network signals.
 > * **The 4 Layers of Identity:** Real browsers are identified across four independent layers: (1) TCP/IP packet characteristics, (2) TLS cryptographic parameters (JA3/JA4), (3) HTTP/2 binary framing, and (4) JavaScript runtime object properties.

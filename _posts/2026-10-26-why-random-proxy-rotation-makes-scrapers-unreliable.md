@@ -27,7 +27,7 @@ header:
   <span style="color: #8b949e;">&gt; FRAUD ENGINE VERDICT:    </span><span style="color: #f85149;">IMPOSSIBLE_TRAVEL_EVENT (Session Cookie Hijack Flagged)</span>
 </div>
 
-> #### ⚡ 30-Second Forensic Breakdown
+> #### ⚡ TL;DR in 30 Seconds
 > * **The Novice Mistake:** Configuring a proxy pool to rotate to a new random IP address on *every single HTTP request*.
 > * **Why It Fails:** Real human users do not teleport from Texas to Germany in 200 milliseconds. Rotating IPs mid-session breaks CSRF tokens, session cookies, and triggers **Impossible Travel** fraud rules.
 > * **The TLS Penalty:** Changing IPs on every call destroys **TLS Session Resumption** (Session Tickets / PSK), forcing your scraper to execute an expensive full TLS handshake every time.
